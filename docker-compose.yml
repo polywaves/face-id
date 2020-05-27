@@ -1,0 +1,1073 @@
+version: "3"
+
+services:
+  camdetector_1:
+    container_name: camdetector_1
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=1
+    volumes:
+      - ./src:/usr/src/app
+
+  camdetector_2:
+    container_name: camdetector_2
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=2
+    volumes:
+      - ./src:/usr/src/app
+
+#  camdetector_58:
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=58
+#    volumes:
+#      - ./src:/usr/src/app
+
+  camdetector_59:
+    container_name: camdetector_59
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=59
+    volumes:
+      - ./src:/usr/src/app
+
+#  camdetector_3:
+#    container_name: camdetector_3
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=3
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_4:
+#    container_name: camdetector_4
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=4
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_5:
+#    container_name: camdetector_5
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=5
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_6:
+#    container_name: camdetector_6
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=6
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_7:
+#    container_name: camdetector_7
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=7
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#
+#  camdetector_8:
+#    container_name: camdetector_8
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=8
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_9:
+#    container_name: camdetector_9
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=9
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_10:
+#    container_name: camdetector_10
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=10
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_11:
+#    container_name: camdetector_11
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=11
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_12:
+#    container_name: camdetector_12
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=12
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_13:
+#    container_name: camdetector_13
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=13
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_14:
+#    container_name: camdetector_14
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=14
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_15:
+#    container_name: camdetector_15
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=15
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_16:
+#    container_name: camdetector_16
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=16
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_17:
+#    container_name: camdetector_17
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=17
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_18:
+#    container_name: camdetector_18
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=18
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_19:
+#    container_name: camdetector_19
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=19
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_20:
+#    container_name: camdetector_20
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=20
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_21:
+#    container_name: camdetector_21
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=21
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_22:
+#    container_name: camdetector_22
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=22
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_23:
+#    container_name: camdetector_23
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=23
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_24:
+#    container_name: camdetector_24
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=24
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_25:
+#    container_name: camdetector_25
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=0
+#      - CUDA_VISIBLE_DEVICES=0
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=25
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_26:
+#    container_name: camdetector_26
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=26
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_27:
+#    container_name: camdetector_27
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=27
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_28:
+#    container_name: camdetector_28
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=28
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_29:
+#    container_name: camdetector_29
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=29
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_30:
+#    container_name: camdetector_30
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=30
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_31:
+#    container_name: camdetector_31
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=31
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_32:
+#    container_name: camdetector_32
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=32
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_33:
+#    container_name: camdetector_33
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=33
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_34:
+#    container_name: camdetector_34
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=34
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_35:
+#    container_name: camdetector_35
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=35
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_36:
+#    container_name: camdetector_36
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=36
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_37:
+#    container_name: camdetector_37
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=37
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_38:
+#    container_name: camdetector_38
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=38
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_39:
+#    container_name: camdetector_39
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=39
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_40:
+#    container_name: camdetector_40
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=40
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_41:
+#    container_name: camdetector_41
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=41
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_42:
+#    container_name: camdetector_42
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=42
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_43:
+#    container_name: camdetector_43
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=43
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_44:
+#    container_name: camdetector_44
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=44
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_45:
+#    container_name: camdetector_45
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=45
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_46:
+#    container_name: camdetector_46
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=46
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_47:
+#    container_name: camdetector_47
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=47
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_48:
+#    container_name: camdetector_48
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=48
+#    volumes:
+#      - ./src:/usr/src/app
+#
+#  camdetector_49:
+#    container_name: camdetector_49
+#    restart: always
+#    build:
+#      context: ./etc/docker/python
+#    privileged: true
+#    command: bash run.bash
+#    tty: true
+#    environment:
+#      - LC_ALL=C.UTF-8
+#      - LANG=C.UTF-8
+#      - NVIDIA_VISIBLE_DEVICES=1
+#      - CUDA_VISIBLE_DEVICES=1
+#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+#      - NVIDIA_DRIVER_CAPABILITIES=all
+#      - GPU=1
+#      - CUDNN=1
+#      - CAMERA_ID=49
+#    volumes:
+#      - ./src:/usr/src/app

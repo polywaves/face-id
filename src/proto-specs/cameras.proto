@@ -1,0 +1,31 @@
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+
+package cameras;
+// Request a list of cameras available
+message ListChallenge {
+    // filter by camera activity status
+    google.protobuf.BoolValue is_active = 1;
+}
+
+// Camera entity representation
+message Camera {
+    int32 id = 1;
+    string ip = 2;
+    bool is_active = 3;
+    string stream_uri = 4;
+    string created_at = 5;
+    string updated_at = 6;
+    string deleted_at = 7;
+}
+
+// Camera entities list representation
+message ListReply {
+    repeated Camera cameras = 1;
+}
+
+// Service to work with camera entities
+service Cameras {
+    // method to request list of cameras
+    rpc getCamerasList(ListChallenge) returns (ListReply) {}
+}
