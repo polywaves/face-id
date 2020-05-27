@@ -23,7 +23,7 @@ class App:
         self.use_faces = 170
         self.stream_request_rate = 10
         self.thresh = 0.2
-        self.matches = 1
+        self.matches = 2
         self.max_objects_thresh = 1
         self.confidence = 95
         self.min_confidence = 40
@@ -430,11 +430,15 @@ class App:
 
                 if max_object[1] > 0:
                     if max_object[0] in self.embeddings:
+                        matches = 0
                         for face_id, face_embedding in self.embeddings[max_object[0]].items():
                             match, score = self.is_match(face_embedding, embedding)
 
                             if match is True:
-                                self.identity[cube_id] = max_object[0]
+                                matches += 1
+
+                                if matches >= self.matches:
+                                    self.identity[cube_id] = max_object[0]
 
                                 print('Matching for', max_object[0], score)
 

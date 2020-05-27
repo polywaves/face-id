@@ -1,4 +1,3 @@
-import os
 import config
 from peewee import Model, PostgresqlDatabase, IntegerField, TextField, PrimaryKeyField, ForeignKeyField, BooleanField, DateField, BlobField
 
