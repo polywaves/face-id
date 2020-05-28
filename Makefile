@@ -14,7 +14,7 @@ restart:
 	make logs
 
 logs:
-	docker-compose logs -f
+	docker-compose logs -f faceid_58
 
 rebuilt:
 	make stop
