@@ -26,9 +26,9 @@ class App:
         self.min_faces = 200
         self.stream_request_rate = 2
         self.thresh = 0.3
-        self.matches = 2
+        self.matches = 1
         self.max_objects_thresh = 1
-        self.confidence = 70
+        self.confidence = 80
         self.min_confidence = 40
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
