@@ -2,7 +2,6 @@ version: "3"
 
 services:
   faceid_1:
-    container_name: faceid_1
     restart: always
     build:
       context: ./etc/docker/python
@@ -23,7 +22,6 @@ services:
       - ./src:/usr/src/app
 
   faceid_2:
-    container_name: faceid_2
     restart: always
     build:
       context: ./etc/docker/python
@@ -45,7 +43,6 @@ services:
 
 
   faceid_59:
-    container_name: faceid_59
     restart: always
     build:
       context: ./etc/docker/python
@@ -89,7 +86,6 @@ services:
       - ./src:/usr/src/app
 
 #  faceid_3:
-#    container_name: faceid_3
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -110,7 +106,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_4:
-#    container_name: faceid_4
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -131,7 +126,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_5:
-#    container_name: faceid_5
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -152,7 +146,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_6:
-#    container_name: faceid_6
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -173,7 +166,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_7:
-#    container_name: faceid_7
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -195,7 +187,6 @@ services:
 #
 #
 #  faceid_8:
-#    container_name: faceid_8
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -216,7 +207,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_9:
-#    container_name: faceid_9
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -237,7 +227,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_10:
-#    container_name: faceid_10
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -258,7 +247,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_11:
-#    container_name: faceid_11
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -279,7 +267,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_12:
-#    container_name: faceid_12
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -300,7 +287,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_13:
-#    container_name: faceid_13
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -321,7 +307,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_14:
-#    container_name: faceid_14
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -342,7 +327,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_15:
-#    container_name: faceid_15
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -363,7 +347,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_16:
-#    container_name: faceid_16
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -384,7 +367,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_17:
-#    container_name: faceid_17
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -405,7 +387,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_18:
-#    container_name: faceid_18
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -426,7 +407,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_19:
-#    container_name: faceid_19
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -447,7 +427,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_20:
-#    container_name: faceid_20
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -468,7 +447,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_21:
-#    container_name: faceid_21
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -489,7 +467,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_22:
-#    container_name: faceid_22
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -510,7 +487,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_23:
-#    container_name: faceid_23
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -531,7 +507,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_24:
-#    container_name: faceid_24
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -552,7 +527,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_25:
-#    container_name: faceid_25
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -573,7 +547,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_26:
-#    container_name: faceid_26
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -594,7 +567,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_27:
-#    container_name: faceid_27
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -615,7 +587,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_28:
-#    container_name: faceid_28
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -636,7 +607,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_29:
-#    container_name: faceid_29
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -657,7 +627,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_30:
-#    container_name: faceid_30
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -678,7 +647,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_31:
-#    container_name: faceid_31
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -699,7 +667,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_32:
-#    container_name: faceid_32
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -720,7 +687,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_33:
-#    container_name: faceid_33
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -741,7 +707,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_34:
-#    container_name: faceid_34
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -762,7 +727,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_35:
-#    container_name: faceid_35
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -783,7 +747,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_36:
-#    container_name: faceid_36
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -804,7 +767,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_37:
-#    container_name: faceid_37
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -825,7 +787,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_38:
-#    container_name: faceid_38
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -846,7 +807,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_39:
-#    container_name: faceid_39
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -867,7 +827,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_40:
-#    container_name: faceid_40
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -888,7 +847,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_41:
-#    container_name: faceid_41
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -909,7 +867,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_42:
-#    container_name: faceid_42
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -930,7 +887,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_43:
-#    container_name: faceid_43
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -951,7 +907,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_44:
-#    container_name: faceid_44
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -972,7 +927,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_45:
-#    container_name: faceid_45
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -993,7 +947,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_46:
-#    container_name: faceid_46
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1014,7 +967,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_47:
-#    container_name: faceid_47
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1035,7 +987,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_48:
-#    container_name: faceid_48
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1056,7 +1007,6 @@ services:
 #      - ./src:/usr/src/app
 #
 #  faceid_49:
-#    container_name: faceid_49
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
