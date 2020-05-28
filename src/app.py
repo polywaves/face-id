@@ -24,9 +24,9 @@ class App:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.stream_request_rate = 5
-        self.thresh = 0.15
-        self.matches = 1
+        self.stream_request_rate = 2
+        self.thresh = 0.3
+        self.matches = 2
         self.max_objects_thresh = 1
         self.confidence = 60
         self.min_confidence = 40
@@ -60,6 +60,7 @@ class App:
         self.dnn_picture_size = (self.dnn_picture_size_x, self.dnn_picture_size_y)
         self.temp = dict()
         self.identity = dict()
+        self.stored_faces = []
 
         exclude = dict()
         exclude[88] = [13219, 13220, 13221, 13222, 13223, 13224, 13225]
@@ -354,8 +355,11 @@ class App:
 
     def consume(self, channel, method_frame, properties, body):
         channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-
         data = pickle.loads(body)
+
+        f = open('consume.log', "w")
+        f.write(json.dumps(data))
+        f.close()
 
         # Get event types
         if 'type' in data:
@@ -399,33 +403,33 @@ class App:
 
     def rect_store(self, rect, cube_id):
         # Get new face and store vector to db
-        faces_count = db.ObjectFaces.select().where(
-            db.ObjectFaces.object_id == self.training_object_id
-        ).count()
-
-        if faces_count < self.grab_faces:
+        if len(self.stored_faces) < self.grab_faces:
             if rect['face'] is not None:
-                # Store to db
-                db.ObjectFaces.create(
-                    data=pickle.dumps({
-                        "rect": rect
-                    }),
-                    object_id=self.training_object_id,
-                    created_at=datetime.utcnow().date()
-                )
+                self.stored_faces.append(rect)
 
                 print('Store face to object id', self.training_object_id)
-                print('amount', faces_count)
+                print('amount', len(self.stored_faces))
 
         # Send learning progress to front
-        percent = int(round((100 / self.grab_faces) * faces_count))
+        percent = int(round((100 / self.grab_faces) * len(self.stored_faces)))
         training_individual_id = self.training_individual_id
         training_object_id = self.training_object_id
 
         if percent > 99:
             percent = 99
 
-        if faces_count == self.grab_faces:
+        if len(self.stored_faces) == self.grab_faces:
+            for _rect in self.stored_faces:
+                # Store to db
+                db.ObjectFaces.create(
+                    data=pickle.dumps({
+                        "rect": _rect
+                    }),
+                    object_id=self.training_object_id,
+                    created_at=datetime.utcnow().date()
+                )
+
+            self.stored_faces = []
             self.training = False
             self.training_individual_id = 0
             self.training_object_id = 0
@@ -445,6 +449,7 @@ class App:
     def training_start(self, individual_id):
         self.training = True
         self.training_individual_id = individual_id
+        self.stored_faces = []
 
         # Create object id
         if self.training_object_id == 0:
@@ -456,10 +461,7 @@ class App:
             self.training_object_id = object_id
 
     def training_cancel(self):
-        db.ObjectFaces.delete().where(
-            db.ObjectFaces.object_id == self.training_object_id
-        ).execute()
-
+        self.stored_faces = []
         self.mq.send(json.dumps({
             "type": "recognition_learning_progress",
             "camera_id": self.camera.id,
@@ -474,6 +476,8 @@ class App:
         self.training = False
 
     def training_remove(self, object_id, individual_id):
+        self.stored_faces = []
+
         db.Objects.delete().where(
             db.Objects.id == object_id
         ).execute()
@@ -499,6 +503,7 @@ class App:
 app = App()
 app.update()
 
-threading.Thread(target=app.mq_receive.consume, args=(app.consume,))
+consume = threading.Thread(target=app.mq_receive.consume, args=(app.consume,))
+consume.start()
 
 app.render()
