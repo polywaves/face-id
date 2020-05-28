@@ -14,21 +14,24 @@ from face_detector import FaceDetector
 from tracker import CentroidTracker
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
 
 
 class App:
     def __init__(self):
         # Defaults
+        self.classifier = 'linear'
         self.grab_faces = 300
-        self.use_faces = 170
-        self.stream_request_rate = 10
-        self.thresh = 0.2
+        self.use_faces = 300
+        self.min_faces = 200
+        self.stream_request_rate = 5
+        self.thresh = 0.15
         self.matches = 2
         self.max_objects_thresh = 1
-        self.confidence = 95
+        self.confidence = 50
         self.min_confidence = 40
-        self.dnn_picture_size_x = 94
-        self.dnn_picture_size_y = 94
+        self.dnn_picture_size_x = 96
+        self.dnn_picture_size_y = 96
         self.dumping_file = 'dump.pickle'
         self.dumping_embeddings_file = 'dump_embeddings.pickle'
         self.dumping_clf_file = 'dump_clf.pickle'
@@ -75,6 +78,279 @@ class App:
                         43025, 43026, 43027, 43028, 43029, 43030]
 
         self.exclude = exclude
+
+    def update(self):
+        objects = db.Objects.select().execute()
+        object_faces = dict()
+
+        # Dump data from db
+        start_time = datetime.now()
+        if os.path.exists(self.dumping_file) is False:
+            os.system('rm -r images/dumps/')
+
+            for row in objects:
+                object_faces[row.id] = dict()
+
+                faces = db.ObjectFaces.select().where(
+                    db.ObjectFaces.object_id == row.id
+                ).limit().execute()
+
+                for face in faces:
+                    data = pickle.loads(face.data)
+                    _face = data['rect']['face']
+                    if _face is not None:
+                        object_faces[row.id][face.id] = _face
+
+                        # Write test images
+                        _dir = 'images/dumps/' + str(row.id)
+                        if not os.path.exists(_dir):
+                            os.makedirs(_dir)
+
+                        cv2.imwrite('images/dumps/' + str(row.id) + '/' + str(face.id) + '.jpg', _face)
+
+                        print('Object face data added for', face.object_id, face.id)
+
+            f = open(self.dumping_file, "wb")
+            f.write(pickle.dumps({
+                "object_faces": object_faces
+            }))
+            f.close()
+
+            print('DB data was dumped')
+
+        print(datetime.now() - start_time)
+
+        # Dump embeddings
+        start_time = datetime.now()
+        if os.path.exists(self.dumping_file) and os.path.exists(self.dumping_embeddings_file) is False:
+            f = open(self.dumping_file, "rb")
+            dump_data = pickle.loads(f.read())
+            f.close()
+
+            embeddings = dict()
+            for object_id, faces in dump_data['object_faces'].items():
+                embeddings[object_id] = dict()
+
+                for face_id, face in faces.items():
+                    embeddings[object_id][face_id] = self.get_embedding(face)
+
+                    print('Embedding was generated for', object_id, face_id)
+
+            f = open(self.dumping_embeddings_file, "wb")
+            f.write(pickle.dumps({
+                "embeddings": embeddings
+            }))
+            f.close()
+
+            print('Face embeddings was dumped')
+
+        print(datetime.now() - start_time)
+
+        # Load embeddings to memory
+        start_time = datetime.now()
+        names = []
+        embeddings = []
+        if os.path.exists(self.dumping_embeddings_file):
+            f = open(self.dumping_embeddings_file, "rb")
+            dump_embeddings_data = pickle.loads(f.read())
+            f.close()
+
+            self.embeddings = dict()
+            for object_id, faces in dump_embeddings_data['embeddings'].items():
+                self.embeddings[object_id] = dict()
+                _count = 0
+                if len(faces) >= self.min_faces:
+                    for face_id, embedding in faces.items():
+                        if object_id in self.exclude:
+                            if face_id in self.exclude[object_id]:
+                                print('Embedding was excluded from list', object_id, face_id)
+                            else:
+                                _count += 1
+
+                                self.embeddings[object_id][face_id] = embedding
+                                names.append(object_id)
+                                embeddings.append(embedding.flatten())
+                        else:
+                            _count += 1
+
+                            self.embeddings[object_id][face_id] = embedding
+                            names.append(object_id)
+                            embeddings.append(embedding.flatten())
+
+                        if _count >= self.use_faces:
+                            break
+
+        print(datetime.now() - start_time)
+
+        # Encode data for dnn
+        start_time = datetime.now()
+        if os.path.exists(self.dumping_clf_file) is False:
+            try:
+                le = LabelEncoder()
+                labels = le.fit_transform(names)
+
+                clf = None
+                if self.classifier == 'linear':
+                    clf = SVC(C=1, kernel="linear", probability=True)
+                elif self.classifier == 'grid':
+                    param_grid = [
+                        {'C': [1, 10, 100, 1000],
+                         'kernel': ['linear']},
+                        {'C': [1, 10, 100, 1000],
+                         'gamma': [0.001, 0.0001],
+                         'kernel': ['rbf']}
+                    ]
+                    clf = GridSearchCV(SVC(C=1, probability=True), param_grid, cv=5)
+
+                clf.fit(embeddings, labels)
+
+                f = open(self.dumping_clf_file, "wb")
+                f.write(pickle.dumps({
+                    "recognizer": clf,
+                    "le": le
+                }))
+                f.close()
+
+                print('Classifier training complete')
+            except Exception:
+                print('Classifier training error')
+
+        if os.path.exists(self.dumping_clf_file):
+            f = open(self.dumping_clf_file, "rb")
+            dump_clf_data = pickle.loads(f.read())
+            f.close()
+
+            self.recognizer = dump_clf_data['recognizer']
+            self.le = dump_clf_data['le']
+
+            print('Classifier loaded from dump')
+
+        print(datetime.now() - start_time)
+        print('Done')
+
+    def face_identification(self, rect, cube_id, screen_width, screen_height):
+        start_time = datetime.now()
+        embedding = self.get_embedding(rect['face'])
+
+        send_individual_id = None
+        send_object_id = None
+        if self.training is False:
+            if self.recognizer:
+                predictions = self.recognizer.predict_proba(embedding)[0]
+                max_value = numpy.argmax(predictions)
+                confidence = int(predictions[max_value] * 100)
+                object_id = int(self.le.classes_[max_value])
+
+                if confidence >= self.confidence:
+                    print(object_id, confidence, '%')
+
+                    if cube_id not in self.temp:
+                        self.temp[cube_id] = dict()
+
+                    if object_id not in self.temp[cube_id]:
+                        self.temp[cube_id][object_id] = 1
+
+                    self.temp[cube_id][object_id] += 1
+
+                    max_object = max(self.temp[cube_id].items(), key=operator.itemgetter(1))
+
+                    print(self.temp[cube_id])
+
+                    if max_object[1] > 0:
+                        if max_object[0] in self.embeddings:
+                            matches = 0
+                            for face_id, face_embedding in self.embeddings[max_object[0]].items():
+                                match, score = self.is_match(face_embedding, embedding)
+
+                                if match is True:
+                                    matches += 1
+
+                                    if matches >= self.matches:
+                                        self.identity[cube_id] = max_object[0]
+                                        print('Matching for', max_object[0], score)
+                                        break
+
+                if cube_id in self.identity:
+                    send_object_id = self.identity[cube_id]
+                    objects = db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute()
+
+                    for row in objects:
+                        send_individual_id = row.individual_id
+
+                        print('Detected face', send_object_id, cube_id)
+
+        # cv2.imwrite('images/test/1.jpg', face)
+        print('Cube id', cube_id)
+
+        self.mq.send(json.dumps({
+            "camera_id": self.camera.id,
+            "individual_id": send_individual_id,
+            "recognition_ts": datetime.utcnow().timestamp(),
+            "data": {
+                "x1": rect['x1'],
+                "y1": rect['y1'],
+                "width": rect['width'],
+                "height": rect['height'],
+                "screen_width": screen_width,
+                "screen_height": screen_height,
+                "object_id": send_object_id,
+                "cube_id": cube_id
+            }
+        }))
+
+        if self.training is True:
+            if self.training_object_id:
+                self.rect_store(rect, cube_id)
+
+        print(datetime.now() - start_time)
+
+    def get_embedding(self, face):
+        face_blob = cv2.dnn.blobFromImage(face, 1 / 255, self.dnn_picture_size, (0, 0, 0), swapRB=True, crop=False)
+
+        self.embedder.setInput(face_blob)
+        embedding = self.embedder.forward()
+
+        return embedding
+
+    def render(self):
+        capture = cv2.VideoCapture(self.camera.stream_uri)
+        index = 0
+        while capture.isOpened():
+            index += 1
+
+            # Get current frame
+            resolve, frame = capture.read()
+            if not resolve:
+                break
+
+            # Get weights
+            height, width = frame.shape[:2]
+            if index % self.stream_request_rate == 0:
+                centroids = []
+                rects = dict()
+                for rect in self.face_detector.get_rects(frame):
+                    centroids.append((rect['x1'], rect['y1'], rect['x2'], rect['y2'], rect['index']))
+                    rects[rect['index']] = rect
+
+                objects = self.ct.update(centroids)
+                for (cube_id, centroid) in objects.items():
+                    if centroid[2] in rects:
+                        rect = rects[centroid[2]]
+                        self.face_identification(rect, cube_id, width, height)
+
+        capture.release()
+        print('Stream not found')
+
+    def is_match(self, known_embedding, candidate_embedding):
+        distance = numpy.sum(numpy.square(known_embedding - candidate_embedding))
+
+        score = 'Distance = ' + str(distance)
+
+        match = False
+        if distance <= self.thresh:
+            match = True
+
+        return match, score
 
     def consume(self, channel, method_frame, properties, body):
         channel.basic_ack(delivery_tag=method_frame.delivery_tag)
@@ -128,7 +404,6 @@ class App:
         ).count()
 
         if faces_count < self.grab_faces:
-            rect['face'] = self.face_detector.check_face(rect['face'])
             if rect['face'] is not None:
                 # Store to db
                 db.ObjectFaces.create(
@@ -220,272 +495,10 @@ class App:
             }
         }), routing_key='recognition_training')
 
-    def get_embedding(self, face):
-        face_blob = cv2.dnn.blobFromImage(face, 1.0 / 255, self.dnn_picture_size, (0, 0, 0), swapRB=True, crop=False)
-
-        self.embedder.setInput(face_blob)
-        embedding = self.embedder.forward()
-
-        return embedding
-
-    def update(self):
-        objects = db.Objects.select().execute()
-        object_faces = dict()
-
-        # Dump data from db
-        start_time = datetime.now()
-        if os.path.exists(self.dumping_file) is False:
-            os.system('rm -r images/dumps/')
-
-            for row in objects:
-                object_faces[row.id] = dict()
-
-                faces = db.ObjectFaces.select().where(
-                    db.ObjectFaces.object_id == row.id
-                ).limit().execute()
-
-                for face in faces:
-                    data = pickle.loads(face.data)
-                    _face = self.face_detector.check_face(
-                        data['rect']['face'],
-                        gray=True, resize=self.dnn_picture_size_x
-                    )
-                    if _face is not None:
-                        object_faces[row.id][face.id] = _face
-
-                        # Write test images
-                        _dir = 'images/dumps/' + str(row.id)
-                        if not os.path.exists(_dir):
-                            os.makedirs(_dir)
-
-                        cv2.imwrite('images/dumps/' + str(row.id) + '/' + str(face.id) + '.jpg', _face)
-
-                        print('Object face data added for', face.object_id, face.id)
-
-            f = open(self.dumping_file, "wb")
-            f.write(pickle.dumps({
-                "object_faces": object_faces
-            }))
-            f.close()
-
-            print('DB data was dumped')
-
-        print(datetime.now() - start_time)
-
-        # Dump embeddings
-        start_time = datetime.now()
-        if os.path.exists(self.dumping_file) and os.path.exists(self.dumping_embeddings_file) is False:
-            f = open(self.dumping_file, "rb")
-            dump_data = pickle.loads(f.read())
-            f.close()
-
-            embeddings = dict()
-            for object_id, faces in dump_data['object_faces'].items():
-                embeddings[object_id] = dict()
-
-                for face_id, face in faces.items():
-                    face = cv2.cvtColor(face, cv2.COLOR_GRAY2BGR)
-                    embeddings[object_id][face_id] = self.get_embedding(face)
-
-                    print('Embedding was generated for', object_id, face_id)
-
-            f = open(self.dumping_embeddings_file, "wb")
-            f.write(pickle.dumps({
-                "embeddings": embeddings
-            }))
-            f.close()
-
-            print('Face embeddings was dumped')
-
-        print(datetime.now() - start_time)
-
-        # Load embeddings to memory
-        start_time = datetime.now()
-        names = []
-        embeddings = []
-        if os.path.exists(self.dumping_embeddings_file):
-            f = open(self.dumping_embeddings_file, "rb")
-            dump_embeddings_data = pickle.loads(f.read())
-            f.close()
-
-            self.embeddings = dict()
-            for object_id, faces in dump_embeddings_data['embeddings'].items():
-                self.embeddings[object_id] = dict()
-                for face_id, embedding in faces.items():
-                    if object_id in self.exclude:
-                        if face_id in self.exclude[object_id]:
-                            print('Embedding was excluded from list', object_id, face_id)
-                        else:
-                            self.embeddings[object_id][face_id] = embedding
-                            names.append(object_id)
-                            embeddings.append(embedding.flatten())
-                    else:
-                        self.embeddings[object_id][face_id] = embedding
-                        names.append(object_id)
-                        embeddings.append(embedding.flatten())
-
-        print(datetime.now() - start_time)
-
-        # Encode data for dnn
-        start_time = datetime.now()
-        if os.path.exists(self.dumping_clf_file) is False:
-            try:
-                le = LabelEncoder()
-                labels = le.fit_transform(names)
-
-                clf = SVC(C=1, kernel="linear", probability=True)
-                clf.fit(embeddings, labels)
-
-                f = open(self.dumping_clf_file, "wb")
-                f.write(pickle.dumps({
-                    "recognizer": clf,
-                    "le": le
-                }))
-                f.close()
-
-                print('Classifier training complete')
-            except Exception:
-                print('Classifier training error')
-
-        if os.path.exists(self.dumping_clf_file):
-            f = open(self.dumping_clf_file, "rb")
-            dump_clf_data = pickle.loads(f.read())
-            f.close()
-
-            self.recognizer = dump_clf_data['recognizer']
-            self.le = dump_clf_data['le']
-
-            print('Classifier loaded from dump')
-
-        print(datetime.now() - start_time)
-        print('Done')
-
-    def render(self):
-        capture = cv2.VideoCapture(self.camera.stream_uri)
-        index = 0
-        while capture.isOpened():
-            index += 1
-
-            # Get current frame
-            resolve, frame = capture.read()
-            if not resolve:
-                break
-
-            # Get weights
-            height, width = frame.shape[:2]
-            if index % self.stream_request_rate == 0:
-                centroids = []
-                _rects = dict()
-                rects = self.face_detector.get_rects(frame)
-                for rect in rects:
-                    centroids.append((rect['x1'], rect['y1'], rect['x2'], rect['y2'], rect['index']))
-                    _rects[rect['index']] = rect
-
-                objects = self.ct.update(centroids)
-                for (cube_id, centroid) in objects.items():
-                    if centroid[2] in _rects:
-                        _rect = _rects[centroid[2]]
-                        self.face_identification(_rect, cube_id, width, height)
-
-        capture.release()
-        print('Stream not found')
-
-    def is_match(self, known_embedding, candidate_embedding):
-        distance = numpy.sum(numpy.square(known_embedding - candidate_embedding))
-
-        score = 'Distance = ' + str(distance)
-
-        match = False
-        if distance <= self.thresh:
-            match = True
-
-        return match, score
-
-    def face_identification(self, rect, cube_id, screen_width, screen_height):
-        start_time = datetime.now()
-        face = cv2.cvtColor(rect['face'], cv2.COLOR_BGR2GRAY)
-        face = cv2.cvtColor(face, cv2.COLOR_GRAY2BGR)
-        embedding = self.get_embedding(face)
-
-        send_individual_id = None
-        send_object_id = None
-        if self.training is False:
-            if self.recognizer:
-                predictions = self.recognizer.predict_proba(embedding)[0]
-                max_value = numpy.argmax(predictions)
-                confidence = int(predictions[max_value] * 100)
-                object_id = int(self.le.classes_[max_value])
-
-                if cube_id not in self.temp:
-                    self.temp[cube_id] = dict()
-
-                if object_id not in self.temp[cube_id]:
-                    self.temp[cube_id][object_id] = 1
-
-                self.temp[cube_id][object_id] += 1
-
-                max_object = max(self.temp[cube_id].items(), key=operator.itemgetter(1))
-
-                print(self.temp)
-
-                if max_object[1] > 0:
-                    if max_object[0] in self.embeddings:
-                        matches = 0
-                        for face_id, face_embedding in self.embeddings[max_object[0]].items():
-                            match, score = self.is_match(face_embedding, embedding)
-
-                            if match is True:
-                                matches += 1
-
-                                if matches >= self.matches:
-                                    self.identity[cube_id] = max_object[0]
-
-                                print('Matching for', max_object[0], score)
-
-                                break
-
-                if cube_id in self.identity:
-                    send_object_id = self.identity[cube_id]
-                    objects = db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute()
-
-                    for row in objects:
-                        send_individual_id = row.individual_id
-
-                        print('Detected face', send_object_id, cube_id)
-
-        # cv2.imwrite('images/test/1.jpg', face)
-        print('Cube id', cube_id)
-
-        self.mq.send(json.dumps({
-            "camera_id": self.camera.id,
-            "individual_id": send_individual_id,
-            "recognition_ts": datetime.utcnow().timestamp(),
-            "data": {
-                "x1": rect['x1'],
-                "y1": rect['y1'],
-                "width": rect['width'],
-                "height": rect['height'],
-                "screen_width": screen_width,
-                "screen_height": screen_height,
-                "object_id": send_object_id,
-                "cube_id": cube_id
-            }
-        }))
-
-        if self.training is True:
-            if self.training_object_id:
-                self.rect_store(rect, cube_id)
-
-        print(datetime.now() - start_time)
-
 
 app = App()
 app.update()
+
+threading.Thread(target=app.mq_receive.consume, args=(app.consume,))
+
 app.render()
-
-
-# def consume():
-#     app.mq_receive.consume(app.consume)
-#
-#
-# threading.Thread(consume)

@@ -1,100 +1,53 @@
 import cv2
 import dlib
-import imutils
+import numpy
 from imutils.face_utils import FaceAligner
-from imutils.face_utils import rect_to_bb
-from imutils.face_utils import shape_to_np
-
-dlib.DLIB_USE_CUDA = True
 
 
 class FaceDetector:
     def __init__(self):
-        self.frame_resize_width = 300
-        self.face_width = 300
-        self.min_face_width = 128
-        self.min_face_height = 128
+        self.min_face_width = 256
+        self.confidence = 0.8
 
-        self.detector = dlib.get_frontal_face_detector()
+        self.detector = cv2.dnn.readNetFromCaffe('dnn/opencv/deploy.prototxt', 'dnn/opencv/res10_300x300_ssd_iter_140000.caffemodel')
         self.predictor = dlib.shape_predictor('dnn/dlib/shape_predictor_68_face_landmarks.dat')
-        self.fa = FaceAligner(self.predictor, desiredFaceWidth=self.face_width)
+        self.fa = FaceAligner(self.predictor, desiredFaceWidth=self.min_face_width)
 
     def get_rects(self, frame):
         result = []
 
+        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         frame_height = frame.shape[0]
         frame_width = frame.shape[1]
-        frame_small = imutils.resize(frame, width=self.frame_resize_width)
-        frame_small_gray = cv2.cvtColor(frame_small, cv2.COLOR_BGR2GRAY)
-        frame_small_height = frame_small.shape[0]
-        frame_small_width = frame_small.shape[1]
-        frame_scale_x = frame_width / frame_small_width
-        frame_scale_y = frame_height / frame_small_height
 
-        index = 0
-        rects = self.detector(frame_small_gray, 2)
-        for rect in rects:
-            (x, y, w, h) = rect_to_bb(rect)
-            x *= frame_scale_x
-            y *= frame_scale_y
-            w *= frame_scale_x
-            h *= frame_scale_y
-            x = int(x)
-            y = int(y)
-            w = int(w)
-            h = int(h)
+        blob = cv2.dnn.blobFromImage(
+            frame, 1.0, (300, 300),
+            (104.0, 177.0, 123.0), swapRB=False, crop=False
+        )
 
-            try:
-                rect = dlib.rectangle(x, y, x + w, y + h)
-                face = self.fa.align(frame, frame_small_gray, rect)
-                if face.shape[1] >= self.face_width:
-                    index += 1
+        self.detector.setInput(blob)
+        detections = self.detector.forward()
+        for index in range(0, detections.shape[2]):
+            confidence = detections[0, 0, index, 2]
 
-                    result.append({
-                        "index": index,
-                        "x1": x,
-                        "y1": y,
-                        "x2": x + w,
-                        "y2": y + h,
-                        "face": face,
-                        "height": h,
-                        "width": w
-                    })
-            except Exception:
-                print('Broken face')
+            if confidence > self.confidence:
+                box = detections[0, 0, index, 3:7] * numpy.array([frame_width, frame_height, frame_width, frame_height])
+                start_x, start_y, end_x, end_y = box.astype("int")
 
-        return result
+                face = frame[start_y:end_y, start_x:end_x]
+                face_height, face_width = face.shape[:2]
+                rect = dlib.rectangle(start_x, start_y, end_x, end_y)
+                face = self.fa.align(frame, frame_gray, rect)
 
-    def check_face(self, face, gray=False, resize=None):
-        result = None
-
-        try:
-            face_gray = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
-            rects = self.detector(face_gray, 2)
-            for rect in rects:
-                shape = self.predictor(face_gray, rect)
-                shape = shape_to_np(shape)
-
-                if len(shape) == 68:
-                    (x, y, w, h) = rect_to_bb(rect)
-                    x = int(x)
-                    y = int(y)
-                    w = int(w)
-                    h = int(h)
-
-                    if gray is True:
-                        face = face_gray[y:y + h, x:x + w]
-                    else:
-                        face = face[y:y + h, x:x + w]
-
-                    face_height = face.shape[0]
-                    face_width = face.shape[1]
-                    if face_width >= self.min_face_width and face_height >= self.min_face_height:
-                        if resize is not None:
-                            face = imutils.resize(face, width=resize)
-
-                        result = face
-        except Exception:
-            print('Broken face')
+                result.append({
+                    "index": index,
+                    "x1": int(start_x),
+                    "y1": int(start_y),
+                    "x2": int(end_x),
+                    "y2": int(end_y),
+                    "face": face,
+                    "height": int(face_height),
+                    "width": int(face_width)
+                })
 
         return result

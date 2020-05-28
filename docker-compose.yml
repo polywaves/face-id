@@ -43,25 +43,6 @@ services:
     volumes:
       - ./src:/usr/src/app
 
-#  camdetector_58:
-#    restart: always
-#    build:
-#      context: ./etc/docker/python
-#    privileged: true
-#    command: bash run.bash
-#    tty: true
-#    environment:
-#      - LC_ALL=C.UTF-8
-#      - LANG=C.UTF-8
-#      - NVIDIA_VISIBLE_DEVICES=0
-#      - CUDA_VISIBLE_DEVICES=0
-#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
-#      - NVIDIA_DRIVER_CAPABILITIES=all
-#      - GPU=1
-#      - CUDNN=1
-#      - CAMERA_ID=58
-#    volumes:
-#      - ./src:/usr/src/app
 
   camdetector_59:
     container_name: camdetector_59
@@ -81,6 +62,29 @@ services:
       - GPU=1
       - CUDNN=1
       - CAMERA_ID=59
+    volumes:
+      - ./src:/usr/src/app
+
+
+
+
+  camdetector_58:
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=58
     volumes:
       - ./src:/usr/src/app
 

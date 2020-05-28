@@ -123,3 +123,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .save
+/dnn/opencv/VGG_FACE.t7
+/dump_clf.pickle
+/dump.pickle
+/dump_embeddings.pickle
+/temp/
