@@ -85,25 +85,25 @@ services:
     volumes:
       - ./src:/usr/src/app
 
-#  faceid_3:
-#    restart: always
-#    build:
-#      context: ./etc/docker/python
-#    privileged: true
-#    command: bash run.bash
-#    tty: true
-#    environment:
-#      - LC_ALL=C.UTF-8
-#      - LANG=C.UTF-8
-#      - NVIDIA_VISIBLE_DEVICES=0
-#      - CUDA_VISIBLE_DEVICES=0
-#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
-#      - NVIDIA_DRIVER_CAPABILITIES=all
-#      - GPU=1
-#      - CUDNN=1
-#      - CAMERA_ID=3
-#    volumes:
-#      - ./src:/usr/src/app
+  faceid_3:
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=3
+    volumes:
+      - ./src:/usr/src/app
 #
 #  faceid_4:
 #    restart: always
@@ -145,45 +145,45 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  faceid_6:
-#    restart: always
-#    build:
-#      context: ./etc/docker/python
-#    privileged: true
-#    command: bash run.bash
-#    tty: true
-#    environment:
-#      - LC_ALL=C.UTF-8
-#      - LANG=C.UTF-8
-#      - NVIDIA_VISIBLE_DEVICES=0
-#      - CUDA_VISIBLE_DEVICES=0
-#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
-#      - NVIDIA_DRIVER_CAPABILITIES=all
-#      - GPU=1
-#      - CUDNN=1
-#      - CAMERA_ID=6
-#    volumes:
-#      - ./src:/usr/src/app
-#
-#  faceid_7:
-#    restart: always
-#    build:
-#      context: ./etc/docker/python
-#    privileged: true
-#    command: bash run.bash
-#    tty: true
-#    environment:
-#      - LC_ALL=C.UTF-8
-#      - LANG=C.UTF-8
-#      - NVIDIA_VISIBLE_DEVICES=0
-#      - CUDA_VISIBLE_DEVICES=0
-#      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
-#      - NVIDIA_DRIVER_CAPABILITIES=all
-#      - GPU=1
-#      - CUDNN=1
-#      - CAMERA_ID=7
-#    volumes:
-#      - ./src:/usr/src/app
+  faceid_6:
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=6
+    volumes:
+      - ./src:/usr/src/app
+
+  faceid_7:
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+      - CAMERA_ID=7
+    volumes:
+      - ./src:/usr/src/app
 #
 #
 #  faceid_8:
