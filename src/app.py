@@ -25,8 +25,8 @@ class App:
         self.use_faces = 300
         self.min_faces = 200
         self.stream_request_rate = 2
-        self.thresh = 0.15
-        self.matches = 1
+        self.thresh = 0.3
+        self.matches = 2
         self.max_objects_thresh = 1
         self.confidence = 70
         self.min_confidence = 40
