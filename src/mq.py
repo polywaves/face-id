@@ -40,6 +40,21 @@ class Mq:
     def close(self):
         self.connection.close()
 
+    def get(self):
+        self.channel.queue_bind(
+            queue=self.queue,
+            exchange=self.exchange,
+            routing_key=self.routing_key
+        )
+
+        try:
+            method_frame, header_frame, body = self.channel.basic_get(queue=self.queue)
+            self.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+
+            return body
+        except Exception:
+            return None
+
     def consume(self, callback):
         self.channel.queue_bind(
             queue=self.queue,

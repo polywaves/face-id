@@ -5,7 +5,6 @@ import numpy
 import json
 import pickle
 import threading
-import imutils
 import grpc_client
 import operator
 from datetime import datetime
@@ -25,7 +24,7 @@ class App:
         self.use_faces = 300
         self.min_faces = 200
         self.stream_request_rate = 4
-        self.thresh = 0.3
+        self.thresh = 0.2
         self.matches = 1
         self.max_objects_thresh = 1
         self.confidence = 80
@@ -327,6 +326,10 @@ class App:
             # Get weights
             height, width = frame.shape[:2]
             if index % self.stream_request_rate == 0:
+                # Check rabbit commands
+                self.consume()
+
+                # Tracking faces
                 centroids = []
                 rects = dict()
                 for rect in self.face_detector.get_rects(frame):
@@ -352,54 +355,6 @@ class App:
             match = True
 
         return match, score
-
-    def consume(self, channel, method_frame, properties, body):
-        channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-        data = pickle.loads(body)
-
-        f = open('consume.log', "w")
-        f.write(json.dumps(data))
-        f.close()
-
-        # Get event types
-        if 'type' in data:
-            # Execute service commands
-            print('Service command execute was requested by front')
-            print(data)
-
-            _data = data['data']
-
-            if 'type' in data:
-                # Execute other commands
-                _type = data['type']
-                camera_id = _data['camera_id']
-                individual_id = _data['individual_id']
-
-                if int(camera_id) == int(self.camera.id):
-                    objects = db.Objects.select().where(
-                        db.Objects.individual_id == individual_id
-                    ).execute()
-
-                    for row in objects:
-                        print('Object Id', row.id)
-
-                        if _type == 'training_cancel':
-                            self.training_cancel()
-                        elif _type == 'training_remove':
-                            self.training_remove(row.id, individual_id)
-
-                    print('Service command execute successful')
-        elif 'train' in data:
-            # Execute dnn training
-            print('DNN Training was requested by front')
-            print(data)
-
-            _data = data['data']
-            camera_id = _data['camera_id']
-            individual_id = _data['individual_id']
-
-            if int(camera_id) == int(self.camera.id):
-                self.training_start(individual_id)
 
     def rect_store(self, rect, cube_id):
         # Get new face and store vector to db
@@ -499,11 +454,52 @@ class App:
             }
         }), routing_key='recognition_training')
 
+    def consume(self):
+        body = self.mq_receive.get()
+        if body is not None:
+            data = pickle.loads(body)
+
+            # Get event types
+            if 'type' in data:
+                # Execute service commands
+                print('Service command execute was requested by front')
+                print(data)
+
+                _data = data['data']
+
+                if 'type' in data:
+                    # Execute other commands
+                    _type = data['type']
+                    camera_id = _data['camera_id']
+                    individual_id = _data['individual_id']
+
+                    if int(camera_id) == int(self.camera.id):
+                        objects = db.Objects.select().where(
+                            db.Objects.individual_id == individual_id
+                        ).execute()
+
+                        for row in objects:
+                            print('Object Id', row.id)
+
+                            if _type == 'training_cancel':
+                                self.training_cancel()
+                            elif _type == 'training_remove':
+                                self.training_remove(row.id, individual_id)
+
+                        print('Service command execute successful')
+            elif 'train' in data:
+                # Execute dnn training
+                print('DNN Training was requested by front')
+                print(data)
+
+                _data = data['data']
+                camera_id = _data['camera_id']
+                individual_id = _data['individual_id']
+
+                if int(camera_id) == int(self.camera.id):
+                    self.training_start(individual_id)
+
 
 app = App()
 app.update()
-
-consume = threading.Thread(target=app.mq_receive.consume, args=(app.consume,))
-consume.start()
-
 app.render()
