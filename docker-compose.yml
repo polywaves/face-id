@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  camdetector_1:
-    container_name: camdetector_1
+  faceid_1:
+    container_name: faceid_1
     restart: always
     build:
       context: ./etc/docker/python
@@ -22,8 +22,8 @@ services:
     volumes:
       - ./src:/usr/src/app
 
-  camdetector_2:
-    container_name: camdetector_2
+  faceid_2:
+    container_name: faceid_2
     restart: always
     build:
       context: ./etc/docker/python
@@ -44,8 +44,8 @@ services:
       - ./src:/usr/src/app
 
 
-  camdetector_59:
-    container_name: camdetector_59
+  faceid_59:
+    container_name: faceid_59
     restart: always
     build:
       context: ./etc/docker/python
@@ -68,7 +68,7 @@ services:
 
 
 
-  camdetector_58:
+  faceid_58:
     restart: always
     build:
       context: ./etc/docker/python
@@ -88,8 +88,8 @@ services:
     volumes:
       - ./src:/usr/src/app
 
-#  camdetector_3:
-#    container_name: camdetector_3
+#  faceid_3:
+#    container_name: faceid_3
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -109,8 +109,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_4:
-#    container_name: camdetector_4
+#  faceid_4:
+#    container_name: faceid_4
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -130,8 +130,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_5:
-#    container_name: camdetector_5
+#  faceid_5:
+#    container_name: faceid_5
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -151,8 +151,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_6:
-#    container_name: camdetector_6
+#  faceid_6:
+#    container_name: faceid_6
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -172,8 +172,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_7:
-#    container_name: camdetector_7
+#  faceid_7:
+#    container_name: faceid_7
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -194,8 +194,8 @@ services:
 #      - ./src:/usr/src/app
 #
 #
-#  camdetector_8:
-#    container_name: camdetector_8
+#  faceid_8:
+#    container_name: faceid_8
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -215,8 +215,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_9:
-#    container_name: camdetector_9
+#  faceid_9:
+#    container_name: faceid_9
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -236,8 +236,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_10:
-#    container_name: camdetector_10
+#  faceid_10:
+#    container_name: faceid_10
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -257,8 +257,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_11:
-#    container_name: camdetector_11
+#  faceid_11:
+#    container_name: faceid_11
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -278,8 +278,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_12:
-#    container_name: camdetector_12
+#  faceid_12:
+#    container_name: faceid_12
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -299,8 +299,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_13:
-#    container_name: camdetector_13
+#  faceid_13:
+#    container_name: faceid_13
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -320,8 +320,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_14:
-#    container_name: camdetector_14
+#  faceid_14:
+#    container_name: faceid_14
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -341,8 +341,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_15:
-#    container_name: camdetector_15
+#  faceid_15:
+#    container_name: faceid_15
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -362,8 +362,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_16:
-#    container_name: camdetector_16
+#  faceid_16:
+#    container_name: faceid_16
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -383,8 +383,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_17:
-#    container_name: camdetector_17
+#  faceid_17:
+#    container_name: faceid_17
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -404,8 +404,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_18:
-#    container_name: camdetector_18
+#  faceid_18:
+#    container_name: faceid_18
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -425,8 +425,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_19:
-#    container_name: camdetector_19
+#  faceid_19:
+#    container_name: faceid_19
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -446,8 +446,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_20:
-#    container_name: camdetector_20
+#  faceid_20:
+#    container_name: faceid_20
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -467,8 +467,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_21:
-#    container_name: camdetector_21
+#  faceid_21:
+#    container_name: faceid_21
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -488,8 +488,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_22:
-#    container_name: camdetector_22
+#  faceid_22:
+#    container_name: faceid_22
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -509,8 +509,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_23:
-#    container_name: camdetector_23
+#  faceid_23:
+#    container_name: faceid_23
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -530,8 +530,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_24:
-#    container_name: camdetector_24
+#  faceid_24:
+#    container_name: faceid_24
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -551,8 +551,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_25:
-#    container_name: camdetector_25
+#  faceid_25:
+#    container_name: faceid_25
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -572,8 +572,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_26:
-#    container_name: camdetector_26
+#  faceid_26:
+#    container_name: faceid_26
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -593,8 +593,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_27:
-#    container_name: camdetector_27
+#  faceid_27:
+#    container_name: faceid_27
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -614,8 +614,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_28:
-#    container_name: camdetector_28
+#  faceid_28:
+#    container_name: faceid_28
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -635,8 +635,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_29:
-#    container_name: camdetector_29
+#  faceid_29:
+#    container_name: faceid_29
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -656,8 +656,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_30:
-#    container_name: camdetector_30
+#  faceid_30:
+#    container_name: faceid_30
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -677,8 +677,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_31:
-#    container_name: camdetector_31
+#  faceid_31:
+#    container_name: faceid_31
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -698,8 +698,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_32:
-#    container_name: camdetector_32
+#  faceid_32:
+#    container_name: faceid_32
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -719,8 +719,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_33:
-#    container_name: camdetector_33
+#  faceid_33:
+#    container_name: faceid_33
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -740,8 +740,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_34:
-#    container_name: camdetector_34
+#  faceid_34:
+#    container_name: faceid_34
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -761,8 +761,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_35:
-#    container_name: camdetector_35
+#  faceid_35:
+#    container_name: faceid_35
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -782,8 +782,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_36:
-#    container_name: camdetector_36
+#  faceid_36:
+#    container_name: faceid_36
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -803,8 +803,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_37:
-#    container_name: camdetector_37
+#  faceid_37:
+#    container_name: faceid_37
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -824,8 +824,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_38:
-#    container_name: camdetector_38
+#  faceid_38:
+#    container_name: faceid_38
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -845,8 +845,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_39:
-#    container_name: camdetector_39
+#  faceid_39:
+#    container_name: faceid_39
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -866,8 +866,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_40:
-#    container_name: camdetector_40
+#  faceid_40:
+#    container_name: faceid_40
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -887,8 +887,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_41:
-#    container_name: camdetector_41
+#  faceid_41:
+#    container_name: faceid_41
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -908,8 +908,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_42:
-#    container_name: camdetector_42
+#  faceid_42:
+#    container_name: faceid_42
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -929,8 +929,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_43:
-#    container_name: camdetector_43
+#  faceid_43:
+#    container_name: faceid_43
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -950,8 +950,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_44:
-#    container_name: camdetector_44
+#  faceid_44:
+#    container_name: faceid_44
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -971,8 +971,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_45:
-#    container_name: camdetector_45
+#  faceid_45:
+#    container_name: faceid_45
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -992,8 +992,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_46:
-#    container_name: camdetector_46
+#  faceid_46:
+#    container_name: faceid_46
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1013,8 +1013,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_47:
-#    container_name: camdetector_47
+#  faceid_47:
+#    container_name: faceid_47
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1034,8 +1034,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_48:
-#    container_name: camdetector_48
+#  faceid_48:
+#    container_name: faceid_48
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
@@ -1055,8 +1055,8 @@ services:
 #    volumes:
 #      - ./src:/usr/src/app
 #
-#  camdetector_49:
-#    container_name: camdetector_49
+#  faceid_49:
+#    container_name: faceid_49
 #    restart: always
 #    build:
 #      context: ./etc/docker/python
