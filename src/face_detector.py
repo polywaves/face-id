@@ -7,7 +7,7 @@ from imutils.face_utils import FaceAligner
 class FaceDetector:
     def __init__(self):
         self.min_face_width = 256
-        self.confidence = 0.8
+        self.confidence = 0.5
 
         self.detector = cv2.dnn.readNetFromCaffe('dnn/opencv/deploy.prototxt', 'dnn/opencv/res10_300x300_ssd_iter_140000.caffemodel')
         self.predictor = dlib.shape_predictor('dnn/dlib/shape_predictor_68_face_landmarks.dat')
