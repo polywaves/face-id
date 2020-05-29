@@ -23,7 +23,7 @@ class App:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.stream_request_rate = 4
+        self.stream_request_rate = 3
         self.thresh = 0.2
         self.matches = 1
         self.max_objects_thresh = 1
