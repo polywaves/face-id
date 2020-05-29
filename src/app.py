@@ -27,7 +27,7 @@ class App:
         self.thresh = 0.2
         self.matches = 1
         self.max_objects_thresh = 1
-        self.confidence = 55
+        self.confidence = 60
         self.min_confidence = 40
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
