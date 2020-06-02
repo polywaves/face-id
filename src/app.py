@@ -233,6 +233,7 @@ class App:
     def face_identification(self, rect, cube_id, screen_width, screen_height):
         start_time = datetime.now()
         embedding = self.get_embedding(rect['face'])
+        cube_id = int(rect['index'])
 
         send_individual_id = None
         send_object_id = None
