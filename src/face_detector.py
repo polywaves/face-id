@@ -40,7 +40,7 @@ class FaceDetector:
                 face = self.fa.align(frame, frame_gray, rect)
 
                 result.append({
-                    "index": index,
+                    "index": index + 1,
                     "x1": int(start_x),
                     "y1": int(start_y),
                     "x2": int(end_x),

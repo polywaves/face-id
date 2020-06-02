@@ -24,7 +24,7 @@ class App:
         self.use_faces = 300
         self.min_faces = 200
         self.fps = 20
-        self.stream_request_rate = 10
+        self.stream_request_rate = 3
         self.clear_delay = int(1000 / (self.fps / self.stream_request_rate))
         self.thresh = 0.2
         self.matches = 1
@@ -233,7 +233,6 @@ class App:
     def face_identification(self, rect, cube_id, screen_width, screen_height):
         start_time = datetime.now()
         embedding = self.get_embedding(rect['face'])
-        cube_id = int(rect['index'])
 
         send_individual_id = None
         send_object_id = None
