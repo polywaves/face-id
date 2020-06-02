@@ -172,6 +172,8 @@ RUN pip3 install imutils
 RUN pip3 install matplotlib
 RUN pip3 install scikit-learn
 RUN pip3 install scipy
+RUN pip3 install tensorflow-gpu
+RUN pip3 install keras
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app

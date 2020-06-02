@@ -23,11 +23,13 @@ class App:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.stream_request_rate = 3
+        self.fps = 20
+        self.stream_request_rate = 1
+        self.clear_delay = int(1000 / (self.fps / self.stream_request_rate))
         self.thresh = 0.2
         self.matches = 1
         self.max_objects_thresh = 1
-        self.confidence = 50
+        self.confidence = 60
         self.min_confidence = 40
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
@@ -294,7 +296,8 @@ class App:
                 "screen_width": screen_width,
                 "screen_height": screen_height,
                 "object_id": send_object_id,
-                "cube_id": cube_id
+                "cube_id": cube_id,
+                "clear_delay": self.clear_delay
             }
         }))
 
