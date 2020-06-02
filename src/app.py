@@ -24,7 +24,7 @@ class App:
         self.use_faces = 300
         self.min_faces = 200
         self.fps = 20
-        self.stream_request_rate = 3
+        self.stream_request_rate = 10
         self.clear_delay = int(1000 / (self.fps / self.stream_request_rate))
         self.thresh = 0.2
         self.matches = 1
