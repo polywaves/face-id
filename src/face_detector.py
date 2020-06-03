@@ -18,7 +18,7 @@ class FaceDetector:
         self.predictor = dlib.shape_predictor('dnn/dlib/shape_predictor_68_face_landmarks.dat')
         self.fa = FaceAligner(self.predictor, desiredFaceWidth=self.min_face_width)
 
-        self.face_trackers = []
+        self.face_trackers = dict()
         self.tracker_current_face_id = 0
 
     def get_scale(self, frame):
@@ -85,14 +85,13 @@ class FaceDetector:
         frame_small, scale_x, scale_y, frame_width, frame_height = self.get_scale(frame)
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        current = 0
-        for face_tracker in self.face_trackers:
-            quality = face_tracker['tracker'].update(frame_small)
+        for face_id, face_tracker in self.face_trackers.items():
+            quality = face_tracker.update(frame_small)
 
             if quality < self.min_quality:
-                del self.face_trackers[current]
+                self.face_trackers.pop(face_id, None)
             else:
-                tracked_position = face_tracker['tracker'].get_position()
+                tracked_position = face_tracker.get_position()
 
                 x = int(tracked_position.left() * scale_x)
                 y = int(tracked_position.top() * scale_y)
@@ -106,18 +105,16 @@ class FaceDetector:
                     rect = dlib.rectangle(x, y, x + width, y + height)
                     face = self.fa.align(frame, frame_gray, rect)
 
-                    response[face_tracker['id']] = {
+                    response[face_id] = {
                         "x": x,
                         "y": y,
                         "width": width,
                         "height": height,
                         "face": face,
-                        "id": face_tracker['id']
+                        "id": face_id
                     }
                 else:
-                    del self.face_trackers[current]
-
-            current += 1
+                    self.face_trackers.pop(face_id, None)
 
         return response
 
@@ -128,8 +125,8 @@ class FaceDetector:
             matched = None
 
             # Find face match
-            for face_tracker in self.face_trackers:
-                tracked_position = face_tracker['tracker'].get_position()
+            for face_id, face_tracker in self.face_trackers.items():
+                tracked_position = face_tracker.get_position()
 
                 tracker_x = int(tracked_position.left())
                 tracker_y = int(tracked_position.top())
@@ -145,7 +142,7 @@ class FaceDetector:
                     (rect['small_x1'] <= t_x_center <= (rect['small_x1'] + rect['small_width'])) and
                     (rect['small_y1'] <= t_y_center <= (rect['small_y1'] + rect['small_height']))
                 ):
-                    matched = face_tracker['id']
+                    matched = face_id
 
             if matched is None:
                 # Create and store the tracker
@@ -158,7 +155,4 @@ class FaceDetector:
                 ))
 
                 self.tracker_current_face_id += 1
-                self.face_trackers.append({
-                    "id": self.tracker_current_face_id,
-                    "tracker": tracker
-                })
+                self.face_trackers[self.tracker_current_face_id] = tracker
