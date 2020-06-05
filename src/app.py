@@ -1,7 +1,5 @@
 import cv2
 import grpc_client
-import json
-from datetime import datetime
 from face_recognition import FaceRecognition
 from face_detector import FaceDetector
 from mq import Mq
@@ -11,7 +9,7 @@ class App:
     def __init__(self):
         # Defaults
         self.stream_request_rate = 5
-        self.stream_request_rate_send = 2
+        self.stream_request_rate_send = 3
 
         self.mq = Mq()
         self.mq.connect()
@@ -24,6 +22,9 @@ class App:
         capture = cv2.VideoCapture(self.camera.stream_uri)
         index = 0
         while capture.isOpened():
+            # check remote commands
+            self.face_recognition.classifier.consume()
+
             index += 1
 
             # Get current frame
@@ -40,14 +41,11 @@ class App:
                 for face_id, data in self.face_detector.track(frame).items():
                     self.face_recognition.face_identification(data, width, height)
 
-            # check remote commands
-            self.face_recognition.consume()
-
         capture.release()
         print('Stream not found')
 
 
 app = App()
-app.face_recognition.update()
+app.face_recognition.classifier.update()
 app.capture()
 

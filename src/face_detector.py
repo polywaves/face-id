@@ -11,7 +11,7 @@ class FaceDetector:
     def __init__(self):
         self.size = 300
         self.min_face_width = 256
-        self.confidence = 0.7
+        self.confidence = 0.95
         self.min_quality = 7
 
         self.detector = cv2.dnn.readNetFromCaffe('dnn/opencv/deploy.prototxt', 'dnn/opencv/res10_300x300_ssd_iter_140000.caffemodel')
@@ -80,16 +80,33 @@ class FaceDetector:
 
         return rects, frame_small
 
+    def get_face(self, frame, frame_gray, x, y, width, height):
+        rect = dlib.rectangle(x, y, x + width, y + height)
+        return self.fa.align(frame, frame_gray, rect)
+
+    def detect_and_get_faces(self, image):
+        frame = cv2.imread(image)
+        rects, frame_small = self.get_faces(frame)
+        frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        faces = []
+        for rect in rects:
+            face = self.get_face(frame, frame_gray, rect['x1'], rect['y1'], rect['width'], rect['height'])
+            faces.append(face)
+
+        return faces
+
     def track(self, frame):
         response = dict()
         frame_small, scale_x, scale_y, frame_width, frame_height = self.get_scale(frame)
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+        faces_to_delete = []
         for face_id, face_tracker in self.face_trackers.items():
             quality = face_tracker.update(frame_small)
 
             if quality < self.min_quality:
-                self.face_trackers.pop(face_id, None)
+                faces_to_delete.append(face_id)
             else:
                 tracked_position = face_tracker.get_position()
 
@@ -102,8 +119,7 @@ class FaceDetector:
                     x > 0 and y > 0 and width > 0 and height > 0 and
                     x + width <= frame_width and y + height <= frame_height
                 ):
-                    rect = dlib.rectangle(x, y, x + width, y + height)
-                    face = self.fa.align(frame, frame_gray, rect)
+                    face = self.get_face(frame, frame_gray, x, y, width, height)
 
                     response[face_id] = {
                         "x": x,
@@ -114,7 +130,10 @@ class FaceDetector:
                         "id": face_id
                     }
                 else:
-                    self.face_trackers.pop(face_id, None)
+                    faces_to_delete.append(face_id)
+
+        for face_id in faces_to_delete:
+            del self.face_trackers[face_id]
 
         return response
 
