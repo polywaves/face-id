@@ -11,6 +11,7 @@ from mq import Mq
 class FaceRecognition:
     def __init__(self):
         self.matches = 1
+        self.matches_vgg = 1
         self.confidence = 50
 
         # Init operations
@@ -56,6 +57,7 @@ class FaceRecognition:
                         if max_object[1] > 0:
                             if max_object[0] in self.classifier.embeddings_vgg:
                                 matches = 0
+                                matches_vgg = 0
                                 for face_id, face_embedding in self.classifier.embeddings[max_object[0]].items():
                                     match, score = self.classifier.is_match(face_embedding, embedding)
 
@@ -68,13 +70,18 @@ class FaceRecognition:
                                             if embedding_vgg is None:
                                                 embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
 
-                                            face_embedding_vgg = self.classifier.embeddings_vgg[max_object[0]][face_id]
-                                            match, score = self.classifier.is_match_vgg(face_embedding_vgg, embedding_vgg)
+                                            for _face_id, _face_embedding in self.classifier.embeddings_vgg[max_object[0]].items():
+                                                match, score = self.classifier.is_match_vgg(_face_embedding, embedding_vgg)
 
-                                            if match is True:
-                                                self.identity[cube_id] = max_object[0]
-                                                print('Matching for', max_object[0], score)
-                                                break
+                                                if match is True:
+                                                    matches_vgg += 1
+
+                                                    if matches_vgg >= self.matches_vgg:
+                                                        self.identity[cube_id] = max_object[0]
+                                                        print('Matching for', max_object[0], score)
+                                                        break
+
+                                            break
 
                 if cube_id in self.identity:
                     send_object_id = self.identity[cube_id]
