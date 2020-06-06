@@ -11,7 +11,7 @@ from mq import Mq
 class FaceRecognition:
     def __init__(self):
         self.matches = 1
-        self.confidence = 70
+        self.confidence = 60
 
         # Init operations
         self.mq = Mq()
