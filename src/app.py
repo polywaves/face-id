@@ -9,7 +9,7 @@ class App:
     def __init__(self):
         # Defaults
         self.stream_request_rate = 5
-        self.stream_request_rate_send = 3
+        self.stream_request_rate_send = 4
 
         self.mq = Mq()
         self.mq.connect()
