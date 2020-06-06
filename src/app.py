@@ -8,8 +8,8 @@ from mq import Mq
 class App:
     def __init__(self):
         # Defaults
-        self.stream_request_rate = 5
-        self.stream_request_rate_send = 20
+        self.detect_rate = 10
+        self.tracking_rate = 5
 
         self.mq = Mq()
         self.mq.connect()
@@ -34,10 +34,10 @@ class App:
 
             # Get weights
             height, width = frame.shape[:2]
-            if index % self.stream_request_rate == 0:
+            if index % self.detect_rate == 0:
                 self.face_detector.detect(frame)
 
-            if index % self.stream_request_rate_send == 0:
+            if index % self.tracking_rate == 0:
                 for face_id, data in self.face_detector.track(frame).items():
                     self.face_recognition.face_identification(data, width, height)
 

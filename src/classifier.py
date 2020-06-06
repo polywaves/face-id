@@ -23,6 +23,7 @@ class Classifier:
         self.use_faces = 300
         self.min_faces = 200
         self.thresh = 0.15
+        self.thresh_vgg = 0.18
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
@@ -113,7 +114,7 @@ class Classifier:
         score = "Distance = " + str(distance)
 
         match = False
-        if distance <= self.thresh:
+        if distance <= self.thresh_vgg:
             match = True
 
         return match, score

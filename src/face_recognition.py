@@ -11,7 +11,7 @@ from mq import Mq
 class FaceRecognition:
     def __init__(self):
         self.matches = 1
-        self.confidence = 30
+        self.confidence = 50
 
         # Init operations
         self.mq = Mq()
@@ -52,26 +52,29 @@ class FaceRecognition:
                     print(self.temp[cube_id])
 
                     embedding_vgg = None
-                    if max_object[1] > 0:
-                        if max_object[0] in self.classifier.embeddings_vgg:
-                            matches = 0
-                            for face_id, face_embedding in self.classifier.embeddings[max_object[0]].items():
-                                match, score = self.classifier.is_match(face_embedding, embedding)
+                    if cube_id not in self.identity:
+                        if max_object[1] > 0:
+                            if max_object[0] in self.classifier.embeddings_vgg:
+                                matches = 0
+                                for face_id, face_embedding in self.classifier.embeddings[max_object[0]].items():
+                                    match, score = self.classifier.is_match(face_embedding, embedding)
 
-                                if match is True:
-                                    matches += 1
+                                    if match is True:
+                                        matches += 1
 
-                                    if matches >= self.matches:
-                                        if embedding_vgg is None:
-                                            embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
+                                        if matches >= self.matches:
+                                            print('Pre matching for', max_object[0], score)
 
-                                        face_embedding_vgg = self.classifier.embeddings_vgg[max_object[0]][face_id]
-                                        match, score = self.classifier.is_match_vgg(face_embedding_vgg, embedding_vgg)
+                                            if embedding_vgg is None:
+                                                embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
 
-                                        if match is True:
-                                            self.identity[cube_id] = max_object[0]
-                                            print('Matching for', max_object[0], score)
-                                            break
+                                            face_embedding_vgg = self.classifier.embeddings_vgg[max_object[0]][face_id]
+                                            match, score = self.classifier.is_match_vgg(face_embedding_vgg, embedding_vgg)
+
+                                            if match is True:
+                                                self.identity[cube_id] = max_object[0]
+                                                print('Matching for', max_object[0], score)
+                                                break
 
                 if cube_id in self.identity:
                     send_object_id = self.identity[cube_id]
