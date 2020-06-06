@@ -47,13 +47,13 @@ class FaceRecognition:
                         self.temp[cube_id][object_id] = 1
 
                     self.temp[cube_id][object_id] += 1
-
                     max_object = max(self.temp[cube_id].items(), key=operator.itemgetter(1))
 
                     print(self.temp[cube_id])
 
+                    embedding_vgg = None
                     if max_object[1] > 0:
-                        if max_object[0] in self.classifier.embeddings:
+                        if max_object[0] in self.classifier.embeddings_vgg:
                             matches = 0
                             for face_id, face_embedding in self.classifier.embeddings[max_object[0]].items():
                                 match, score = self.classifier.is_match(face_embedding, embedding)
@@ -62,9 +62,16 @@ class FaceRecognition:
                                     matches += 1
 
                                     if matches >= self.matches:
-                                        self.identity[cube_id] = max_object[0]
-                                        print('Matching for', max_object[0], score)
-                                        break
+                                        if embedding_vgg is None:
+                                            embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
+
+                                        face_embedding_vgg = self.classifier.embeddings_vgg[max_object[0]][face_id]
+                                        match, score = self.classifier.is_match_vgg(face_embedding_vgg, embedding_vgg)
+
+                                        if match is True:
+                                            self.identity[cube_id] = max_object[0]
+                                            print('Matching for', max_object[0], score)
+                                            break
 
                 if cube_id in self.identity:
                     send_object_id = self.identity[cube_id]

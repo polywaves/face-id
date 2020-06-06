@@ -11,6 +11,7 @@ from mq import Mq
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
+from scipy.spatial.distance import cosine
 
 
 class Classifier:
@@ -21,12 +22,15 @@ class Classifier:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.thresh = 0.1
+        self.thresh = 0.2
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
+        self.dnn_vgg_picture_size_x = 224
+        self.dnn_vgg_picture_size_y = 224
         self.dumping_file = 'dump.pickle'
         self.dumping_embeddings_file = 'dump_embeddings.pickle'
+        self.dumping_embeddings_vgg_file = 'dump_embeddings_vgg.pickle'
         self.dumping_clf_file = 'dump_clf.pickle'
         self.stored_faces = []
 
@@ -43,12 +47,15 @@ class Classifier:
         self.recognizer = None
         self.le = None
         self.embedder = cv2.dnn.readNetFromTorch('dnn/opencv/openface_nn4.v2.t7')
+        self.embedder_vgg = cv2.dnn.readNetFromTorch('dnn/opencv/VGG_FACE.t7')
         self.training = False
         self.training_camera_id = 0
         self.training_individual_id = 0
         self.training_object_id = 0
         self.embeddings = dict()
+        self.embeddings_vgg = dict()
         self.dnn_picture_size = (self.dnn_picture_size_x, self.dnn_picture_size_y)
+        self.dnn_vgg_picture_size = (self.dnn_vgg_picture_size_x, self.dnn_vgg_picture_size_y)
 
         self.classifier_names = []
         self.classifier_embeddings = []
@@ -71,90 +78,53 @@ class Classifier:
 
         self.exclude = exclude
 
+    def get_embedding(self, face):
+        face_blob = cv2.dnn.blobFromImage(face, 1 / 255, self.dnn_picture_size, (0, 0, 0), swapRB=True, crop=False)
+
+        self.embedder.setInput(face_blob)
+        embedding = self.embedder.forward()
+
+        return embedding
+
+    def get_embedding_vgg(self, face):
+        face_blob = cv2.dnn.blobFromImage(face, 1 / 255, self.dnn_vgg_picture_size, (0, 0, 0), swapRB=True, crop=False)
+
+        self.embedder_vgg.setInput(face_blob)
+        embedding = self.embedder_vgg.forward()
+
+        return embedding
+
+    def is_match(self, known_embedding, candidate_embedding):
+        distance = numpy.sum(numpy.square(known_embedding - candidate_embedding))
+
+        score = 'Distance = ' + str(distance)
+
+        match = False
+        if distance <= self.thresh:
+            match = True
+
+        return match, score
+
+    def is_match_vgg(self, known_embedding, candidate_embedding):
+        distance = known_embedding - candidate_embedding
+        distance = numpy.sum(numpy.multiply(distance, distance))
+        distance = numpy.sqrt(distance) * 1000
+
+        score = "Distance = " + str(distance)
+
+        match = False
+        if distance <= self.thresh:
+            match = True
+
+        return match, score
+
     def update(self):
         self.update_db()
         self.update_embeddings()
+        self.update_vgg_embeddings()
         self.update_classifier()
 
         print('Done')
-
-    def update_test_dataset(self):
-        start_time = datetime.now()
-
-        dataset = 'images/dataset'
-        format = '.JPG'
-        dump_file = 'test_dataset.pickle'
-        dump_file_embeddings = 'test_dataset_embeddings.pickle'
-
-        _faces = dict()
-        if os.path.exists(dump_file) is False:
-            for entry in os.scandir(dataset):
-                if entry.is_dir():
-                    object_id = int(entry.name)
-                    _faces[object_id] = []
-                    # Scan images
-                    for image in os.scandir(os.path.join(dataset, entry.name)):
-                        if image.name.endswith(format):
-                            _image = os.path.join(dataset, entry.name, image.name)
-
-                            _path = os.path.join('images', 'test', entry.name)
-                            _path_image = os.path.join(_path, image.name)
-                            try:
-                                os.makedirs(_path)
-                            except Exception:
-                                print('Dir exists', _path)
-
-                            if os.path.exists(_path_image):
-                                face = cv2.imread(_path_image)
-                                _faces[object_id].append(face)
-
-                                print('Image exists', _path_image)
-                            else:
-                                faces = self.face_detector.detect_and_get_faces(_image)
-                                for face in faces:
-                                    cv2.imwrite(_path_image, face)
-
-                                    _faces[object_id].append(face)
-
-                                    print('Created', _path, image.name)
-
-            f = open(dump_file, "wb")
-            f.write(pickle.dumps({
-                "faces": _faces
-            }))
-            f.close()
-        else:
-            f = open(dump_file, "rb")
-            dump_data = pickle.loads(f.read())
-            f.close()
-
-            _faces = dump_data['faces']
-
-        embeddings = dict()
-        if os.path.exists(dump_file_embeddings) is False:
-            for object_id, faces in _faces.items():
-                embeddings[object_id] = []
-                for face in faces:
-                    embedding = self.get_embedding(face)
-                    embeddings[object_id].append(embedding)
-
-                    print('Test embedding was created for', object_id)
-
-            f = open(dump_file_embeddings, "wb")
-            f.write(pickle.dumps({
-                "embeddings": embeddings
-            }))
-            f.close()
-        else:
-            f = open(dump_file_embeddings, "rb")
-            dump_data = pickle.loads(f.read())
-            f.close()
-
-            embeddings = dump_data['embeddings']
-
-        print(datetime.now() - start_time)
-
-        return embeddings
 
     def update_db(self):
         objects = db.Objects.select().execute()
@@ -233,22 +203,8 @@ class Classifier:
             dump_embeddings_data = pickle.loads(f.read())
             f.close()
 
-            embeddings = dict()
-            test_embeddings = self.update_test_dataset()
-
-            for object_id, faces in dump_embeddings_data['embeddings'].items():
-                if object_id in test_embeddings:
-                    embeddings[object_id] = dict()
-
-                    _count = 0
-                    for embedding in test_embeddings[object_id]:
-                        _count += 1
-                        embeddings[object_id][_count] = embedding
-                else:
-                    embeddings[object_id] = faces
-
             self.embeddings = dict()
-            for object_id, faces in embeddings.items():
+            for object_id, faces in dump_embeddings_data['embeddings'].items():
                 self.embeddings[object_id] = dict()
                 _count = 0
                 if len(faces) >= self.min_faces:
@@ -268,6 +224,63 @@ class Classifier:
                             self.embeddings[object_id][face_id] = embedding
                             self.classifier_names.append(object_id)
                             self.classifier_embeddings.append(embedding.flatten())
+
+                        if _count >= self.use_faces:
+                            break
+
+        print(datetime.now() - start_time)
+
+    def update_vgg_embeddings(self):
+        # Dump embeddings
+        start_time = datetime.now()
+        if os.path.exists(self.dumping_file) and os.path.exists(self.dumping_embeddings_vgg_file) is False:
+            f = open(self.dumping_file, "rb")
+            dump_data = pickle.loads(f.read())
+            f.close()
+
+            embeddings = dict()
+            for object_id, faces in dump_data['object_faces'].items():
+                embeddings[object_id] = dict()
+
+                for face_id, face in faces.items():
+                    embeddings[object_id][face_id] = self.get_embedding_vgg(face)
+
+                    print('VGG Embedding was generated for', object_id, face_id)
+
+            f = open(self.dumping_embeddings_vgg_file, "wb")
+            f.write(pickle.dumps({
+                "embeddings": embeddings
+            }))
+            f.close()
+
+            print('VGG Face embeddings was dumped')
+
+        print(datetime.now() - start_time)
+
+        # Load embeddings to memory
+        start_time = datetime.now()
+        if os.path.exists(self.dumping_embeddings_vgg_file):
+            f = open(self.dumping_embeddings_vgg_file, "rb")
+            dump_embeddings_data = pickle.loads(f.read())
+            f.close()
+
+            self.embeddings_vgg = dict()
+            for object_id, faces in dump_embeddings_data['embeddings'].items():
+                self.embeddings_vgg[object_id] = dict()
+                _count = 0
+                if len(faces) >= self.min_faces:
+                    for face_id, embedding in faces.items():
+                        if object_id in self.exclude:
+                            if face_id in self.exclude[object_id]:
+                                print('Embedding was excluded from list', object_id, face_id)
+                            else:
+                                _count += 1
+
+                                self.embeddings_vgg[object_id][face_id] = embedding
+                        else:
+                            _count += 1
+
+                            self.embeddings_vgg[object_id][face_id] = embedding
 
                         if _count >= self.use_faces:
                             break
@@ -319,25 +332,6 @@ class Classifier:
             print('Classifier loaded from dump')
 
         print(datetime.now() - start_time)
-
-    def get_embedding(self, face):
-        face_blob = cv2.dnn.blobFromImage(face, 1 / 255, self.dnn_picture_size, (0, 0, 0), swapRB=True, crop=False)
-
-        self.embedder.setInput(face_blob)
-        embedding = self.embedder.forward()
-
-        return embedding
-
-    def is_match(self, known_embedding, candidate_embedding):
-        distance = numpy.sum(numpy.square(known_embedding - candidate_embedding))
-
-        score = 'Distance = ' + str(distance)
-
-        match = False
-        if distance <= self.thresh:
-            match = True
-
-        return match, score
 
     def face_store(self, face, cube_id):
         # Get new face and store vector to db
