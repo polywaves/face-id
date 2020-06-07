@@ -11,7 +11,7 @@ class FaceDetector:
     def __init__(self):
         self.size = 300
         self.min_face_width = 256
-        self.confidence = 0.95
+        self.confidence = 0.6
         self.min_quality = 7
 
         self.detector = cv2.dnn.readNetFromCaffe('dnn/opencv/deploy.prototxt', 'dnn/opencv/res10_300x300_ssd_iter_140000.caffemodel')
