@@ -22,7 +22,7 @@ class Classifier:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.thresh = 0.5
+        self.thresh = 0.2
         self.thresh_vgg = 0.08
 
         self.dnn_picture_size_x = 96
