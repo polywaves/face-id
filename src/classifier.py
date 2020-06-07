@@ -22,8 +22,8 @@ class Classifier:
         self.grab_faces = 300
         self.use_faces = 300
         self.min_faces = 200
-        self.thresh = 0.15
-        self.thresh_vgg = 0.10
+        self.thresh = 0.30
+        self.thresh_vgg = 0.15
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
@@ -96,7 +96,9 @@ class Classifier:
         return embedding
 
     def is_match(self, known_embedding, candidate_embedding):
-        distance = numpy.sum(numpy.square(known_embedding - candidate_embedding))
+        distance = known_embedding - candidate_embedding
+        distance = numpy.sum(numpy.multiply(distance, distance))
+        distance = numpy.sqrt(distance)
 
         score = 'Distance = ' + str(distance)
 
