@@ -23,7 +23,7 @@ class Classifier:
         self.use_faces = 300
         self.min_faces = 200
         self.thresh = 0.15
-        self.thresh_vgg = 0.18
+        self.thresh_vgg = 0.15
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
