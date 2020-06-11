@@ -90,8 +90,8 @@ class FaceRecognition:
                             send_individual_id = row.individual_id
 
                             for _row in db.ObjectFaces.select().where(db.ObjectFaces.object_id == send_object_id).limit(1).execute():
-                                data = pickle.loads(_row.data)
-                                _face = data['rect']['face']
+                                _data = pickle.loads(_row.data)
+                                _face = _data['rect']['face']
 
                                 im = Image.fromarray(_face.astype("uint8"))
                                 raw = io.BytesIO()
