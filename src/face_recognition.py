@@ -96,7 +96,7 @@ class FaceRecognition:
                             raw = io.BytesIO()
                             im.save(raw, "PNG")
                             raw.seek(0)
-                            face = base64.b64encode(raw.read())
+                            face = str(base64.b64encode(raw.read()))
 
                         print('Detected face', send_object_id, cube_id)
                 else:
