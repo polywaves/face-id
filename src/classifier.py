@@ -11,7 +11,6 @@ from mq import Mq
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
-from scipy.spatial.distance import cosine
 
 
 class Classifier:
@@ -23,7 +22,7 @@ class Classifier:
         self.use_faces = 300
         self.min_faces = 200
         self.thresh = 0.30
-        self.thresh_vgg = 0.15
+        self.thresh_vgg = 0.20
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96

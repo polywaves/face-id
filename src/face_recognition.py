@@ -35,7 +35,7 @@ class FaceRecognition:
 
             send_individual_id = None
             send_object_id = None
-            confidence = 0
+            send_confidence = 0
             rejected = None
             face = None
             if self.classifier.training is False:
@@ -73,14 +73,19 @@ class FaceRecognition:
                                                         matches_vgg += 1
 
                                                         if matches_vgg >= self.matches_vgg:
-                                                            self.identity[cube_id] = object_id
+                                                            rejected = False
+                                                            self.identity[cube_id] = {
+                                                                "object_id": object_id,
+                                                                "confidence": confidence
+                                                            }
                                                             print('Matching for', object_id, score)
                                                             break
 
                                                 break
 
                     if cube_id in self.identity:
-                        send_object_id = self.identity[cube_id]
+                        send_confidence = self.identity[cube_id]['confidence']
+                        send_object_id = self.identity[cube_id]['object_id']
                         for row in db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute():
                             send_individual_id = row.individual_id
 
@@ -95,6 +100,9 @@ class FaceRecognition:
                                 face = base64.b64encode(raw.read())
 
                             print('Detected face', send_object_id, cube_id)
+                    else:
+                        send_confidence = confidence
+                        rejected = True
 
             # cv2.imwrite('images/test/1.jpg', face)
             print('Cube id', cube_id)
@@ -112,7 +120,7 @@ class FaceRecognition:
                     "screen_height": screen_height,
                     "object_id": send_object_id,
                     "cube_id": cube_id,
-                    "confidence": confidence,
+                    "confidence": send_confidence,
                     "rejected": rejected,
                     "face": face
                 }

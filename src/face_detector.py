@@ -117,7 +117,8 @@ class FaceDetector:
 
                 if (
                     x > 0 and y > 0 and width > 0 and height > 0 and
-                    x + width <= frame_width and y + height <= frame_height
+                    x + width <= frame_width and y + height <= frame_height and
+                    height >= width
                 ):
                     face = self.get_face(frame, frame_gray, x, y, width, height)
 
