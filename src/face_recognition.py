@@ -15,7 +15,8 @@ class FaceRecognition:
     def __init__(self):
         self.matches = 1
         self.matches_vgg = 1
-        self.confidence = 0
+        self.confidence = 30
+        self.retries = 10
 
         # Init operations
         self.mq = Mq()
@@ -25,6 +26,7 @@ class FaceRecognition:
 
         self.temp = dict()
         self.identity = dict()
+        self.identified = dict()
 
     def face_identification(self, data, screen_width, screen_height):
         cube_id = data['id']
@@ -35,8 +37,8 @@ class FaceRecognition:
         send_individual_id = None
         send_object_id = None
         send_confidence = 0
-        rejected = None
         face = None
+        rejected = None
         if self.classifier.training is False:
             if self.classifier.recognizer:
                 predictions = self.classifier.recognizer.predict_proba(embedding)[0]
@@ -50,7 +52,7 @@ class FaceRecognition:
                     embedding_vgg = None
                     if cube_id not in self.identity:
                         if object_id > 0:
-                            if object_id in self.classifier.embeddings_vgg:
+                            if object_id in self.classifier.embeddings and object_id in self.classifier.embeddings_vgg:
                                 matches = 0
                                 matches_vgg = 0
                                 for face_id, face_embedding in self.classifier.embeddings[object_id].items():
@@ -72,17 +74,21 @@ class FaceRecognition:
                                                     matches_vgg += 1
 
                                                     if matches_vgg >= self.matches_vgg:
-                                                        rejected = False
                                                         self.identity[cube_id] = {
                                                             "object_id": object_id,
                                                             "confidence": confidence
                                                         }
                                                         print('Matching for', object_id, score)
                                                         break
-
                                             break
 
+                                if cube_id not in self.identified:
+                                    self.identified[cube_id] = 0
+
+                                self.identified[cube_id] += 1
+
                 if cube_id in self.identity:
+                    rejected = False
                     send_confidence = self.identity[cube_id]['confidence']
                     send_object_id = self.identity[cube_id]['object_id']
                     for row in db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute():
@@ -96,12 +102,16 @@ class FaceRecognition:
                             raw = io.BytesIO()
                             im.save(raw, "PNG")
                             raw.seek(0)
-                            face = str(base64.b64encode(raw.read()))
+                            face = str(base64.b64encode(raw.read()).decode('utf-8'))
 
                         print('Detected face', send_object_id, cube_id)
                 else:
                     send_confidence = confidence
-                    rejected = True
+
+                    if cube_id in self.identified and cube_id not in self.identity:
+                        if self.identified[cube_id] >= self.retries:
+                            if confidence <= self.confidence:
+                                rejected = True
 
         # cv2.imwrite('images/test/1.jpg', face)
         print('Cube id', cube_id)
@@ -120,8 +130,8 @@ class FaceRecognition:
                 "object_id": send_object_id,
                 "cube_id": cube_id,
                 "confidence": send_confidence,
-                "rejected": rejected,
-                "face": face
+                "face": face,
+                "rejected": rejected
             }
         }))
 
