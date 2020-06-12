@@ -50,42 +50,41 @@ class FaceRecognition:
                     print('Predicted', object_id, confidence, '%')
 
                     embedding_vgg = None
-                    if cube_id not in self.identity:
-                        if object_id > 0:
-                            if object_id in self.classifier.embeddings and object_id in self.classifier.embeddings_vgg:
-                                matches = 0
-                                matches_vgg = 0
-                                for face_id, face_embedding in self.classifier.embeddings[object_id].items():
-                                    match, score = self.classifier.is_match(face_embedding, embedding)
+                    if object_id > 0:
+                        if object_id in self.classifier.embeddings and object_id in self.classifier.embeddings_vgg:
+                            matches = 0
+                            matches_vgg = 0
+                            for face_id, face_embedding in self.classifier.embeddings[object_id].items():
+                                match, score = self.classifier.is_match(face_embedding, embedding)
 
-                                    if match is True:
-                                        matches += 1
+                                if match is True:
+                                    matches += 1
 
-                                        if matches >= self.matches:
-                                            print('Pre matching for', object_id, score)
+                                    if matches >= self.matches:
+                                        print('Pre matching for', object_id, score)
 
-                                            if embedding_vgg is None:
-                                                embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
+                                        if embedding_vgg is None:
+                                            embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
 
-                                            for _face_id, _face_embedding in self.classifier.embeddings_vgg[object_id].items():
-                                                match, score = self.classifier.is_match_vgg(_face_embedding, embedding_vgg)
+                                        for _face_id, _face_embedding in self.classifier.embeddings_vgg[object_id].items():
+                                            match, score = self.classifier.is_match_vgg(_face_embedding, embedding_vgg)
 
-                                                if match is True:
-                                                    matches_vgg += 1
+                                            if match is True:
+                                                matches_vgg += 1
 
-                                                    if matches_vgg >= self.matches_vgg:
-                                                        self.identity[cube_id] = {
-                                                            "object_id": object_id,
-                                                            "confidence": confidence
-                                                        }
-                                                        print('Matching for', object_id, score)
-                                                        break
-                                            break
+                                                if matches_vgg >= self.matches_vgg:
+                                                    self.identity[cube_id] = {
+                                                        "object_id": object_id,
+                                                        "confidence": confidence
+                                                    }
+                                                    print('Matching for', object_id, score)
+                                                    break
+                                        break
 
-                                if cube_id not in self.identified:
-                                    self.identified[cube_id] = 0
+                            if cube_id not in self.identified:
+                                self.identified[cube_id] = 0
 
-                                self.identified[cube_id] += 1
+                            self.identified[cube_id] += 1
 
                 if cube_id in self.identity:
                     rejected = False
