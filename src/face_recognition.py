@@ -15,7 +15,7 @@ class FaceRecognition:
     def __init__(self):
         self.matches = 1
         self.matches_vgg = 1
-        self.confidence = 30
+        self.confidence = 10
         self.retries = 10
 
         # Init operations
