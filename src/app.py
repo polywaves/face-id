@@ -8,8 +8,8 @@ from mq import Mq
 class App:
     def __init__(self):
         # Defaults
-        self.detect_rate = 5
-        self.tracking_rate = 3
+        self.detect_rate = 10
+        self.tracking_rate = 4
 
         self.mq = Mq()
         self.mq.connect()

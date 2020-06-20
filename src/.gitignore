@@ -128,3 +128,4 @@ dmypy.json
 /dump.pickle
 /dump_embeddings.pickle
 /temp/
+/images/

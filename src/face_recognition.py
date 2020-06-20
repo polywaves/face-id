@@ -1,3 +1,4 @@
+import operator
 import pickle
 import io
 import base64
@@ -13,10 +14,9 @@ from mq import Mq
 
 class FaceRecognition:
     def __init__(self):
-        self.matches = 1
-        self.matches_vgg = 1
-        self.confidence = 10
+        self.confidence = 30
         self.retries = 10
+        self.clear_delay = 200
 
         # Init operations
         self.mq = Mq()
@@ -39,78 +39,70 @@ class FaceRecognition:
         send_confidence = 0
         face = None
         rejected = None
-        if self.classifier.training is False:
-            if self.classifier.recognizer:
-                predictions = self.classifier.recognizer.predict_proba(embedding)[0]
-                max_value = numpy.argmax(predictions)
-                confidence = int(predictions[max_value] * 100)
-                object_id = int(self.classifier.le.classes_[max_value])
+        if self.classifier.training is False and self.classifier.recognizer:
+            predictions = self.classifier.recognizer.predict_proba(embedding)[0]
+            max_value = numpy.argmax(predictions)
+            confidence = int(predictions[max_value] * 100)
+            object_id = int(self.classifier.le.classes_[max_value])
 
-                if confidence >= self.confidence:
-                    print('Predicted', object_id, confidence, '%')
+            if object_id > 0:
+                if object_id in self.classifier.embeddings:
+                    for face_id, face_embedding in self.classifier.embeddings[object_id].items():
+                        match, score = self.classifier.is_match(face_embedding, embedding)
+                        if match is True:
+                            if cube_id not in self.temp:
+                                self.temp[cube_id] = dict()
 
-                    embedding_vgg = None
-                    if object_id > 0:
-                        if object_id in self.classifier.embeddings and object_id in self.classifier.embeddings_vgg:
-                            matches = 0
-                            matches_vgg = 0
-                            for face_id, face_embedding in self.classifier.embeddings[object_id].items():
-                                match, score = self.classifier.is_match(face_embedding, embedding)
+                            if object_id not in self.temp[cube_id]:
+                                self.temp[cube_id][object_id] = 0
 
-                                if match is True:
-                                    matches += 1
+                            self.temp[cube_id][object_id] += 1
+                            self.identity[cube_id] = {
+                                "confidence": confidence,
+                                "object_id": object_id,
+                                "score": score
+                            }
 
-                                    if matches >= self.matches:
-                                        print('Pre matching for', object_id, score)
+                            print('Predicted', object_id, confidence, '%')
 
-                                        if embedding_vgg is None:
-                                            embedding_vgg = self.classifier.get_embedding_vgg(data['face'])
+                    if cube_id not in self.identified:
+                        self.identified[cube_id] = 0
 
-                                        for _face_id, _face_embedding in self.classifier.embeddings_vgg[object_id].items():
-                                            match, score = self.classifier.is_match_vgg(_face_embedding, embedding_vgg)
+                    self.identified[cube_id] += 1
 
-                                            if match is True:
-                                                matches_vgg += 1
+            if cube_id in self.identity and cube_id in self.temp:
+                print(self.temp[cube_id])
 
-                                                if matches_vgg >= self.matches_vgg:
-                                                    self.identity[cube_id] = {
-                                                        "object_id": object_id,
-                                                        "confidence": confidence
-                                                    }
-                                                    print('Matching for', object_id, score)
-                                                    break
-                                        break
+                identity = self.identity[cube_id]
+                temp = self.temp[cube_id]
+                _max = max(temp.items(), key=operator.itemgetter(1))
+                max_object_id = _max[0]
 
-                            if cube_id not in self.identified:
-                                self.identified[cube_id] = 0
+                rejected = False
+                send_confidence = identity['confidence']
+                send_object_id = identity['object_id']
+                # send_object_id = max_object_id
+                for row in db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute():
+                    send_individual_id = row.individual_id
 
-                            self.identified[cube_id] += 1
+                    for _row in db.ObjectFaces.select().where(db.ObjectFaces.object_id == send_object_id).limit(1).execute():
+                        _data = pickle.loads(_row.data)
+                        _face = _data['rect']['face']
 
-                if cube_id in self.identity:
-                    rejected = False
-                    send_confidence = self.identity[cube_id]['confidence']
-                    send_object_id = self.identity[cube_id]['object_id']
-                    for row in db.Objects.select().where(db.Objects.id == send_object_id).limit(1).execute():
-                        send_individual_id = row.individual_id
+                        im = Image.fromarray(_face.astype("uint8"))
+                        raw = io.BytesIO()
+                        im.save(raw, "JPEG")
+                        raw.seek(0)
+                        face = str(base64.b64encode(raw.read()).decode('utf-8'))
 
-                        for _row in db.ObjectFaces.select().where(db.ObjectFaces.object_id == send_object_id).limit(1).execute():
-                            _data = pickle.loads(_row.data)
-                            _face = _data['rect']['face']
+                    print('Detected face', send_object_id, cube_id)
+            else:
+                send_confidence = confidence
 
-                            im = Image.fromarray(_face.astype("uint8"))
-                            raw = io.BytesIO()
-                            im.save(raw, "PNG")
-                            raw.seek(0)
-                            face = str(base64.b64encode(raw.read()).decode('utf-8'))
-
-                        print('Detected face', send_object_id, cube_id)
-                else:
-                    send_confidence = confidence
-
-                    if cube_id in self.identified and cube_id not in self.identity:
-                        if self.identified[cube_id] >= self.retries:
-                            if confidence <= self.confidence:
-                                rejected = True
+                if cube_id in self.identified and cube_id not in self.identity:
+                    if self.identified[cube_id] >= self.retries:
+                        if confidence <= self.confidence:
+                            rejected = True
 
         # cv2.imwrite('images/test/1.jpg', face)
         print('Cube id', cube_id)
@@ -130,7 +122,8 @@ class FaceRecognition:
                 "cube_id": cube_id,
                 "confidence": send_confidence,
                 "face": face,
-                "rejected": rejected
+                "rejected": rejected,
+                "clear_delay": self.clear_delay
             }
         }))
 
