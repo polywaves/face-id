@@ -1,11 +1,14 @@
 import cv2
+import base64
 import os
 import db
 import json
 import pickle
+import io
 import imutils
 import numpy
 import grpc_client
+from PIL import Image
 from dataset import Dataset
 from datetime import datetime
 from face_detector import FaceDetector
@@ -23,7 +26,7 @@ class Classifier:
         self.classifier = 'linear'
         self.grab_faces = 300
         self.use_faces = 300
-        self.thresh = 0.25
+        self.thresh = 0.30
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
@@ -53,6 +56,7 @@ class Classifier:
         self.embeddings = dict()
         self.dnn_picture_size = (self.dnn_picture_size_x, self.dnn_picture_size_y)
 
+        self.objects = dict()
         self.object_faces = dict()
         self.embeddings = dict()
         self.classifier_names = []
@@ -71,13 +75,11 @@ class Classifier:
         distance = numpy.sum(numpy.multiply(distance, distance))
         distance = numpy.sqrt(distance)
 
-        score = 'Distance = ' + str(distance)
-
         match = False
         if distance <= self.thresh:
             match = True
 
-        return match, score
+        return match, distance
 
     def update(self):
         start_time = datetime.now()
@@ -92,10 +94,15 @@ class Classifier:
         start_time = datetime.now()
 
         objects = db.Objects.select().order_by(db.Objects.id.asc()).execute()
+        self.objects = dict()
         self.object_faces = dict()
         dump_object_faces = dict()
 
         for row in objects:
+            self.objects[row.id] = {
+                "individual_id": row.individual_id,
+                "face": None
+            }
             self.object_faces[row.id] = dict()
 
         if os.path.exists(self.dumping_file):
@@ -133,6 +140,19 @@ class Classifier:
                         # Write test images
                         cv2.imwrite(os.path.join(object_path, str(_row.id) + '.jpg'), face)
                         print('Object face data added for', object_id, _row.id)
+
+            count = 0
+            for face_id, face in self.object_faces[object_id].items():
+                count += 1
+
+                im = Image.fromarray(face.astype("uint8"))
+                raw = io.BytesIO()
+                im.save(raw, "JPEG")
+                raw.seek(0)
+                self.objects[object_id]['face'] = str(base64.b64encode(raw.read()).decode('utf-8'))
+
+                if count == 1:
+                    break
 
         f = open(self.dumping_file, "wb")
         f.write(pickle.dumps({
