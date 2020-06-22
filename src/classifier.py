@@ -1,14 +1,11 @@
 import cv2
-import base64
 import os
 import db
 import json
 import pickle
-import io
 import imutils
 import numpy
 import grpc_client
-from PIL import Image
 from dataset import Dataset
 from datetime import datetime
 from face_detector import FaceDetector
@@ -26,7 +23,7 @@ class Classifier:
         self.classifier = 'linear'
         self.grab_faces = 300
         self.use_faces = 300
-        self.thresh = 0.30
+        self.thresh = 0.25
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
@@ -145,11 +142,7 @@ class Classifier:
             for face_id, face in self.object_faces[object_id].items():
                 count += 1
 
-                im = Image.fromarray(face.astype("uint8"))
-                raw = io.BytesIO()
-                im.save(raw, "JPEG")
-                raw.seek(0)
-                self.objects[object_id]['face'] = str(base64.b64encode(raw.read()).decode('utf-8'))
+                self.objects[object_id]['face'] = self.dataset.create_base64_face(face)
 
                 if count == 1:
                     break

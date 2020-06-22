@@ -1,5 +1,7 @@
 import cv2
 import grpc_client
+import json
+from datetime import datetime
 from face_recognition import FaceRecognition
 from face_detector import FaceDetector
 from mq import Mq
@@ -8,8 +10,8 @@ from mq import Mq
 class App:
     def __init__(self):
         # Defaults
-        self.detect_rate = 2
-        self.tracking_rate = 3
+        self.detect_rate = 10
+        self.tracking_rate = 5
 
         self.mq = Mq()
         self.mq.connect()
@@ -38,8 +40,19 @@ class App:
                 self.face_detector.detect(frame)
 
             if index % self.tracking_rate == 0:
+                rects = []
                 for face_id, data in self.face_detector.track(frame).items():
-                    self.face_recognition.face_identification(data, width, height)
+                    rect = self.face_recognition.face_identification(index, data, width, height)
+
+                    if rect:
+                        rects.append(rect)
+
+                self.mq.send(json.dumps({
+                    "camera_id": self.camera.id,
+                    "individual_id": None,
+                    "recognition_ts": datetime.utcnow().timestamp(),
+                    "data": rects
+                }))
 
         capture.release()
         print('Stream not found')

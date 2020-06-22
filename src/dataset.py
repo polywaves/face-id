@@ -1,4 +1,7 @@
+import base64
 import dlib
+import io
+from PIL import Image
 
 
 class Dataset:
@@ -14,3 +17,12 @@ class Dataset:
             faces += 1
 
         return faces
+
+    @staticmethod
+    def create_base64_face(face):
+        im = Image.fromarray(face.astype("uint8"))
+        raw = io.BytesIO()
+        im.save(raw, "JPEG")
+        raw.seek(0)
+
+        return str(base64.b64encode(raw.read()).decode('utf-8'))

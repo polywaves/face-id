@@ -1,23 +1,16 @@
 import operator
-import pickle
-import db
 import numpy
-import json
 import grpc_client
 from datetime import datetime
 from classifier import Classifier
-from mq import Mq
 
 
 class FaceRecognition:
     def __init__(self):
         self.confidence = 30
-        self.retries = 10
-        self.clear_delay = 200
+        self.retries = 5
 
         # Init operations
-        self.mq = Mq()
-        self.mq.connect()
         self.camera = grpc_client.get_camera()
         self.classifier = Classifier()
 
@@ -25,7 +18,7 @@ class FaceRecognition:
         self.identities = dict()
         self.identified = dict()
 
-    def face_identification(self, data, screen_width, screen_height):
+    def face_identification(self, index, data, screen_width, screen_height):
         if self.classifier.dataset.check_face(data['face']) == 1:
             cube_id = data['id']
 
@@ -81,37 +74,35 @@ class FaceRecognition:
                     print(identities)
                 else:
                     send_confidence = confidence
+                    face = self.classifier.dataset.create_base64_face(data['face'])
 
                     if cube_id in self.identified and cube_id not in self.identities:
                         if self.identified[cube_id] >= self.retries:
                             if confidence <= self.confidence:
                                 rejected = True
 
-            # cv2.imwrite('images/test/1.jpg', face)
             print('Cube id', cube_id)
-
-            self.mq.send(json.dumps({
-                "camera_id": self.camera.id,
-                "individual_id": send_individual_id,
-                "recognition_ts": datetime.utcnow().timestamp(),
-                "data": {
-                    "x1": data['x'],
-                    "y1": data['y'],
-                    "width": data['width'],
-                    "height": data['height'],
-                    "screen_width": screen_width,
-                    "screen_height": screen_height,
-                    "object_id": send_object_id,
-                    "cube_id": cube_id,
-                    "confidence": send_confidence,
-                    "face": face,
-                    "rejected": rejected,
-                    "clear_delay": self.clear_delay
-                }
-            }))
 
             if self.classifier.training is True:
                 if self.classifier.training_object_id:
                     self.classifier.face_store(data['face'], cube_id)
 
             print(datetime.now() - start_time)
+
+            return {
+                "individual_id": send_individual_id,
+                "x1": data['x'],
+                "y1": data['y'],
+                "width": data['width'],
+                "height": data['height'],
+                "screen_width": screen_width,
+                "screen_height": screen_height,
+                "object_id": send_object_id,
+                "cube_id": cube_id,
+                "confidence": send_confidence,
+                "face": face,
+                "rejected": rejected,
+                "index": index
+            }
+        else:
+            return None
