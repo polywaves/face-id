@@ -23,7 +23,7 @@ class Classifier:
         self.classifier = 'linear'
         self.grab_faces = 300
         self.use_faces = 300
-        self.thresh = 0.30
+        self.thresh = 0.3
 
         self.dnn_picture_size_x = 96
         self.dnn_picture_size_y = 96
