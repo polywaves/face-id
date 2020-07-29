@@ -1,7 +1,7 @@
 import cv2
 import dlib
-import numpy
 import imutils
+from mtcnn import MTCNN
 from imutils.face_utils import FaceAligner
 
 dlib.DLIB_USE_CUDA = True
@@ -14,7 +14,7 @@ class FaceDetector:
         self.confidence = 0.6
         self.min_quality = 7
 
-        self.detector = cv2.dnn.readNetFromCaffe('dnn/opencv/deploy.prototxt', 'dnn/opencv/res10_300x300_ssd_iter_140000.caffemodel')
+        self.detector = MTCNN()
         self.predictor = dlib.shape_predictor('dnn/dlib/shape_predictor_68_face_landmarks.dat')
         self.fa = FaceAligner(self.predictor, desiredFaceWidth=self.min_face_width)
 
@@ -35,29 +35,22 @@ class FaceDetector:
     def get_faces(self, frame):
         frame_small, scale_x, scale_y, frame_width, frame_height = self.get_scale(frame)
 
-        blob = cv2.dnn.blobFromImage(
-            frame_small, 1.0, (self.size, self.size),
-            (104.0, 177.0, 123.0), swapRB=False, crop=False
-        )
-
-        self.detector.setInput(blob)
-        detections = self.detector.forward()
+        detects = self.detector.detect_faces(frame)
         rects = []
-        for index in range(0, detections.shape[2]):
-            confidence = detections[0, 0, index, 2]
+        for detect in detects:
+            confidence = detect['confidence']
 
             if confidence > self.confidence:
-                box = detections[0, 0, index, 3:7] * numpy.array([frame_width, frame_height, frame_width, frame_height])
-                start_x, start_y, end_x, end_y = box.astype("int")
-                small_start_x = int(start_x / scale_x)
-                small_start_y = int(start_y / scale_y)
+                start_x, start_y, face_width, face_height = detect['box']
+                end_x = start_x + face_width
+                end_y = start_y + face_height
 
-                face = frame[start_y:end_y, start_x:end_x]
-                face_height, face_width = face.shape[:2]
-                small_face_width = int(face_width / scale_x)
-                small_face_height = int(face_height / scale_y)
-                small_end_x = small_start_x + small_face_width
-                small_end_y = small_start_y + small_face_height
+                small_start_x = start_x / scale_x
+                small_start_y = start_y / scale_y
+                small_face_width = face_width / scale_x
+                small_face_height = face_width / scale_y
+                small_end_x = end_x / scale_x
+                small_end_y = end_y / scale_y
 
                 rects.append({
                     "x1": int(start_x),

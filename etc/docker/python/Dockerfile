@@ -103,6 +103,14 @@ RUN cd nv-codec-headers && make -j$(nproc) && make install
 RUN git clone https://git.ffmpeg.org/ffmpeg.git
 RUN cd ffmpeg &&  ./configure  --enable-shared --disable-static --enable-cuda --enable-cuvid --enable-libnpp --enable-libvpx --enable-libopus --enable-libx264 --enable-libx265  --enable-gpl --enable-pic --enable-libass --enable-nvenc --enable-nonfree --enable-libx265 --extra-cflags="-I/usr/local/cuda/include/ -fPIC" --extra-ldflags="-L/usr/local/cuda/lib64/ -Wl,-Bsymbolic"  && make -j$(nproc) && make install
 
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+# Install pip depences
+RUN python3 -m pip install --upgrade pip
+COPY requirements.txt /usr/src/app/requirements.txt
+RUN pip3 install -r requirements.txt
+
+WORKDIR /
 # Install OpenCV
 RUN wget https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip -O opencv.zip --progress=bar:force:noscroll && \
     unzip -q opencv.zip && \
@@ -158,22 +166,6 @@ RUN cd /opencv/build && \
     make install && \
     ldconfig
 
-# Install pip depences
-RUN pip3 install --upgrade pip
-RUN pip3 install python-dotenv
-RUN pip3 install peewee
-RUN pip3 install psycopg2-binary
-RUN pip3 install pika
-RUN pip3 install grpcio
-RUN pip3 install grpcio-tools
-RUN pip3 install simplejson
-RUN pip3 install Pillow
-RUN pip3 install imutils
-RUN pip3 install matplotlib
-RUN pip3 install scikit-learn
-RUN pip3 install scipy
-#RUN pip3 install tensorflow-gpu
-#RUN pip3 install keras
 
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
+

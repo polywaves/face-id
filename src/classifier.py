@@ -116,7 +116,7 @@ class Classifier:
             if object_id in dump_object_faces:
                 self.object_faces[object_id] = dump_object_faces[object_id]
 
-                print('Object face data restored from dump for', object_id)
+                # print('Object face data restored from dump for', object_id)
             else:
                 object_path = os.path.join(self.dataset_path, str(object_id))
 
@@ -136,7 +136,7 @@ class Classifier:
 
                         # Write test images
                         cv2.imwrite(os.path.join(object_path, str(_row.id) + '.jpg'), face)
-                        print('Object face data added for', object_id, _row.id)
+                        # print('Object face data added for', object_id, _row.id)
 
             count = 0
             for face_id, face in self.object_faces[object_id].items():
@@ -172,14 +172,14 @@ class Classifier:
             if object_id in embeddings:
                 self.embeddings[object_id] = embeddings[object_id]
 
-                print('Embeddings was restored from dump', object_id)
+                # print('Embeddings was restored from dump', object_id)
             else:
                 self.embeddings[object_id] = dict()
 
                 for face_id, face in faces.items():
                     self.embeddings[object_id][face_id] = self.get_embedding(face)
 
-                    print('Embedding was generated for', object_id, face_id)
+                    # print('Embedding was generated for', object_id, face_id)
 
         f = open(self.dumping_embeddings_file, "wb")
         f.write(pickle.dumps({

@@ -1,0 +1,15 @@
+python-dotenv
+peewee
+psycopg2-binary
+pika
+grpcio
+grpcio-tools
+simplejson
+Pillow
+imutils
+matplotlib
+scikit-learn
+scipy
+tensorflow-gpu
+mtcnn
+#keras
