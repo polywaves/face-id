@@ -512,8 +512,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -532,8 +532,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -552,8 +552,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -572,8 +572,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -592,8 +592,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -612,8 +612,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -632,8 +632,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -652,8 +652,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -672,8 +672,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -692,8 +692,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -712,8 +712,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -732,8 +732,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -752,8 +752,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -772,8 +772,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -792,8 +792,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -812,8 +812,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -832,8 +832,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -852,8 +852,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -872,8 +872,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -892,8 +892,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -912,8 +912,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -932,8 +932,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -952,8 +952,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
@@ -972,8 +972,8 @@ services:
     environment:
       - LC_ALL=C.UTF-8
       - LANG=C.UTF-8
-      - NVIDIA_VISIBLE_DEVICES=1
-      - CUDA_VISIBLE_DEVICES=1
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
       - OPENCV_FFMPEG_CAPTURE_OPTIONS=vsync;0|video_codec;hevc_cuvid|hwaccl;cuvid|transport;tcp
       - NVIDIA_DRIVER_CAPABILITIES=all
       - GPU=1
