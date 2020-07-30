@@ -35,7 +35,7 @@ class Mq:
     def connect(self):
         self.connection = pika.BlockingConnection(self.parameters)
         self.channel = self.connection.channel()
-        self.channel.exchange_declare(exchange=self.exchange)
+        self.channel.exchange_declare(exchange=self.exchange, durable=True)
         self.channel.queue_declare(queue=self.queue, durable=True)
 
         self.channel.queue_bind(
