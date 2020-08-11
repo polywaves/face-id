@@ -354,6 +354,8 @@ class Classifier:
     def consume(self):
         body = self.mq_receive.get()
 
+        print(body)
+
         if body is not None:
             data = pickle.loads(body)
 
