@@ -16,7 +16,7 @@ class App:
         # Defaults
         self.detect_rate = 10
         self.tracking_rate = 5
-        self.request_camera_time = 40
+        self.request_camera_time = 20
 
         self.mq = Mq()
         self.mq.connect()
@@ -28,6 +28,8 @@ class App:
         self.camera = grpc_client.get_camera()
 
         if self.camera.recognition_on:
+            # check remote commands
+            self.face_recognition.classifier.consume()
             print('Service online')
         else:
             print('Service offline')
@@ -41,9 +43,6 @@ class App:
 
             if index % self.request_camera_time == 0:
                 self.check()
-
-            # check remote commands
-            self.face_recognition.classifier.consume()
 
             # Get current frame
             resolve, frame = capture.read()
