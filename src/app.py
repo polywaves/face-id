@@ -71,7 +71,7 @@ class App:
                 }))
 
         capture.release()
-        print('Stream not found')
+        print('Stream not found, restarting')
 
 
 app = App()
