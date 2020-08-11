@@ -43,7 +43,7 @@ class App:
                 self.check()
 
             # check remote commands
-            # self.face_recognition.classifier.consume()
+            self.face_recognition.classifier.consume()
 
             # Get current frame
             resolve, frame = capture.read()
