@@ -39,8 +39,6 @@ class App:
 
             if index % self.request_camera_time == 0:
                 self.check()
-                # check remote commands
-                self.face_recognition.classifier.consume()
 
             # Get current frame
             resolve, frame = capture.read()
@@ -66,6 +64,9 @@ class App:
                     "recognition_ts": datetime.utcnow().timestamp(),
                     "data": rects
                 }))
+
+            # check remote commands
+            self.face_recognition.classifier.consume()
 
         capture.release()
         print('Stream not found, restarting')
