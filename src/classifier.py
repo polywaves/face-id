@@ -111,8 +111,6 @@ class Classifier:
 
             for object_id, faces in dump_data['object_faces'].items():
                 dump_object_faces[object_id] = faces
-        else:
-            os.system('rm -r ' + self.dataset_path)
 
         for object_id, data in self.object_faces.items():
             if object_id in dump_object_faces:
@@ -135,10 +133,7 @@ class Classifier:
                     face = imutils.resize(data['rect']['face'], self.dnn_picture_size_x)
                     if self.dataset.check_face(face) == 1:
                         self.object_faces[object_id][_row.id] = face
-
-                        # Write test images
-                        cv2.imwrite(os.path.join(object_path, str(_row.id) + '.jpg'), face)
-                        # print('Object face data added for', object_id, _row.id)
+                        print('Object face data added for', object_id, _row.id)
 
             count = 0
             for face_id, face in self.object_faces[object_id].items():
@@ -182,7 +177,7 @@ class Classifier:
                     self.embeddings[object_id][face_id] = self.get_embedding(face)
                     self.start_clf_update = True
 
-                    # print('Embedding was generated for', object_id, face_id)
+                    print('Embedding was generated for', object_id, face_id)
 
         f = open(self.dumping_embeddings_file, "wb")
         f.write(pickle.dumps({
