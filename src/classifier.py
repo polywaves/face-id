@@ -369,16 +369,16 @@ class Classifier:
                     individual_id = _data['individual_id']
 
                     if int(camera_id) == int(self.camera.id):
-                        self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-
                         objects = db.Objects.select().where(
                             db.Objects.individual_id == individual_id
                         ).execute()
 
                         for row in objects:
                             if _type == 'training_cancel':
+                                self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                                 self.training_cancel()
                             elif _type == 'training_remove':
+                                self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
                                 self.training_remove(row.id, individual_id)
             elif 'train' in data:
                 _data = data['data']
