@@ -59,6 +59,8 @@ class Classifier:
         self.classifier_names = []
         self.classifier_embeddings = []
 
+        self.start_clf_update = False
+
     def get_embedding(self, face):
         face_blob = cv2.dnn.blobFromImage(face, 1 / 255, self.dnn_picture_size, (0, 0, 0), swapRB=True, crop=False)
 
@@ -178,6 +180,7 @@ class Classifier:
 
                 for face_id, face in faces.items():
                     self.embeddings[object_id][face_id] = self.get_embedding(face)
+                    self.start_clf_update = True
 
                     # print('Embedding was generated for', object_id, face_id)
 
@@ -206,7 +209,7 @@ class Classifier:
                 if count == self.use_faces:
                     break
 
-        if os.path.exists(self.dumping_clf_file):
+        if os.path.exists(self.dumping_clf_file) and self.start_clf_update is False:
             f = open(self.dumping_clf_file, "rb")
             dump_clf_data = pickle.loads(f.read())
             f.close()
@@ -248,6 +251,8 @@ class Classifier:
                 print('Classifier training complete')
             except Exception:
                 print('Classifier training error')
+
+        self.start_clf_update = False
 
         print(datetime.now() - start_time)
 
