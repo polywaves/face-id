@@ -16,7 +16,7 @@ class App:
         # Defaults
         self.detect_rate = 10
         self.tracking_rate = 5
-        self.request_camera_time = 40
+        self.request_camera_time = 20
 
         self.mq = Mq()
         self.mq.connect()
@@ -27,9 +27,7 @@ class App:
     def check(self):
         self.camera = grpc_client.get_camera()
 
-        if self.camera.recognition_on:
-            print('Service online')
-        else:
+        if self.camera.recognition_on is not True:
             print('Service offline')
             exit()
 

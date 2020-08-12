@@ -50,9 +50,8 @@ class Mq:
     def get(self):
         try:
             method_frame, header_frame, body = self.channel.basic_get(queue=self.queue)
-            self.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 
-            return body
+            return body, method_frame
         except Exception:
             return None
 

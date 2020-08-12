@@ -352,19 +352,14 @@ class Classifier:
         }), routing_key='recognition_training')
 
     def consume(self):
-        body = self.mq_receive.get()
-
-        print(body)
+        body, method_frame = self.mq_receive.get()
 
         if body is not None:
             data = pickle.loads(body)
+            print(data)
 
             # Get event types
             if 'type' in data:
-                # Execute service commands
-                print('Service command execute was requested by front')
-                print(data)
-
                 _data = data['data']
 
                 if 'type' in data:
@@ -379,22 +374,18 @@ class Classifier:
                         ).execute()
 
                         for row in objects:
-                            print('Object Id', row.id)
-
                             if _type == 'training_cancel':
                                 self.training_cancel()
                             elif _type == 'training_remove':
                                 self.training_remove(row.id, individual_id)
 
-                        print('Service command execute successful')
+                        self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
             elif 'train' in data:
-                # Execute dnn training
-                print('DNN Training was requested by front')
-                print(data)
-
                 _data = data['data']
                 camera_id = _data['camera_id']
                 individual_id = _data['individual_id']
 
                 if int(camera_id) == int(self.camera.id):
                     self.training_start(individual_id)
+
+                    self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)

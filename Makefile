@@ -1,12 +1,12 @@
 # Makefile
 build:
-	docker-compose build
+	docker-compose -f docker-compose.dev.yml build
 
 start:
-	docker-compose up -d
+	docker-compose -f docker-compose.dev.yml up -d
 
 stop:
-	docker-compose down -v
+	docker-compose -f docker-compose.dev.yml down -v
 
 restart:
 	make stop
@@ -14,7 +14,7 @@ restart:
 	make logs
 
 logs:
-	docker-compose logs -f faceid_58
+	docker-compose -f docker-compose.dev.yml logs -f
 
 rebuilt:
 	make stop
