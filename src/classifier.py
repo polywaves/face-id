@@ -287,6 +287,8 @@ class Classifier:
             self.training_object_id = 0
             percent = 100
 
+            self.update()
+
         self.mq.send(json.dumps({
             "type": "recognition_learning_progress",
             "camera_id": self.camera.id,
