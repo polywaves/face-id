@@ -21,7 +21,7 @@ class Mq:
         self.connection = None
         self.channel = None
 
-        connection_name = 'face-id_cam-' + config.get('CAMERA_ID')
+        connection_name = 'faceid_daemon'
 
         credentials = pika.PlainCredentials(self.username, self.password)
         self.parameters = pika.ConnectionParameters(

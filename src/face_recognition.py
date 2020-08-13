@@ -1,8 +1,6 @@
 import operator
 import numpy
-import grpc_client
 from datetime import datetime
-from classifier import Classifier
 
 
 class FaceRecognition:
@@ -11,14 +9,13 @@ class FaceRecognition:
         self.retries = 5
 
         # Init operations
-        self.camera = grpc_client.get_camera()
-        self.classifier = Classifier()
+        self.classifier = None
 
         self.confidences = dict()
         self.identities = dict()
         self.identified = dict()
 
-    def face_identification(self, index, data, screen_width, screen_height):
+    def identify(self, index, data, screen_width, screen_height):
         if self.classifier.dataset.check_face(data['face']) == 1:
             cube_id = data['id']
 
@@ -30,7 +27,7 @@ class FaceRecognition:
             send_confidence = 0
             face = None
             rejected = None
-            if self.classifier.training is False and self.classifier.recognizer:
+            if self.classifier.recognizer:
                 predictions = self.classifier.recognizer.predict_proba(embedding)[0]
                 max_value = numpy.argmax(predictions)
                 confidence = int(predictions[max_value] * 100)
@@ -81,11 +78,7 @@ class FaceRecognition:
                             if confidence <= self.confidence:
                                 rejected = True
 
-            print('Cube id', cube_id)
-
-            if self.classifier.training is True:
-                if self.classifier.training_object_id:
-                    self.classifier.face_store(data['face'], cube_id)
+                print('Cube id', cube_id)
 
             print(datetime.now() - start_time)
 

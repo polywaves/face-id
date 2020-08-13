@@ -1,9 +1,6 @@
 import cv2
 import grpc_client
-import json
-from datetime import datetime
-from face_recognition import FaceRecognition
-# from mtcnn_face_detector import FaceDetector
+import pickle
 from face_detector import FaceDetector
 from mq import Mq
 
@@ -18,10 +15,13 @@ class App:
         self.tracking_rate = 5
         self.request_camera_time = 20
 
-        self.mq = Mq()
-        self.mq.connect()
+        self.mq_receive = Mq(
+            queue='recognition_records_pass_to_dnn',
+            exchange='recognition_records_faces',
+            routing_key='new_record'
+        )
+        self.mq_receive.connect()
 
-        self.face_recognition = FaceRecognition()
         self.face_detector = FaceDetector()
 
     def check(self):
@@ -53,26 +53,23 @@ class App:
             if index % self.tracking_rate == 0:
                 rects = []
                 for face_id, data in self.face_detector.track(frame).items():
-                    rect = self.face_recognition.face_identification(index, data, width, height)
+                    rects.append(data)
 
-                    if rect:
-                        rects.append(rect)
-
-                self.mq.send(json.dumps({
-                    "camera_id": self.camera.id,
-                    "individual_id": None,
-                    "recognition_ts": datetime.utcnow().timestamp(),
-                    "data": rects
+                self.mq_receive.send(pickle.dumps({
+                    "detect": True,
+                    "data": {
+                        "camera_id": self.camera.id,
+                        "index": index,
+                        "rects": rects,
+                        "screen_width": width,
+                        "screen_height": height
+                    }
                 }))
-
-            # check remote commands
-            self.face_recognition.classifier.consume()
 
         capture.release()
         print('Stream not found, restarting')
 
 
 app = App()
-app.face_recognition.classifier.update()
 app.capture()
 

@@ -1,12 +1,30 @@
 version: "3"
 
 services:
+  recognize:
+    restart: always
+    build:
+      context: ./etc/docker/python
+    privileged: true
+    command: bash run_recognize.bash
+    tty: true
+    environment:
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - NVIDIA_VISIBLE_DEVICES=0
+      - CUDA_VISIBLE_DEVICES=0
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GPU=1
+      - CUDNN=1
+    volumes:
+      - ./src:/usr/src/app
+
   faceid_1:
     restart: always
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -26,7 +44,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -46,7 +64,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -66,7 +84,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -86,7 +104,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -106,7 +124,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -126,7 +144,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -147,7 +165,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -167,7 +185,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -187,7 +205,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -207,7 +225,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -227,7 +245,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -247,7 +265,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -267,7 +285,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -287,7 +305,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -307,7 +325,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -327,7 +345,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -347,7 +365,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -367,7 +385,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -387,7 +405,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -407,7 +425,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -427,7 +445,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -447,7 +465,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -467,7 +485,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -487,7 +505,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -507,7 +525,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -527,7 +545,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -547,7 +565,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -567,7 +585,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -587,7 +605,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -607,7 +625,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -627,7 +645,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -647,7 +665,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -667,7 +685,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -687,7 +705,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -707,7 +725,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -727,7 +745,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -747,7 +765,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -767,7 +785,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -787,7 +805,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -807,7 +825,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -827,7 +845,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -847,7 +865,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -867,7 +885,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -887,7 +905,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -907,7 +925,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -927,7 +945,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -947,7 +965,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -967,7 +985,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -987,7 +1005,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8
@@ -1007,7 +1025,7 @@ services:
     build:
       context: ./etc/docker/python
     privileged: true
-    command: bash run.bash
+    command: bash run_detect.bash
     tty: true
     environment:
       - LC_ALL=C.UTF-8

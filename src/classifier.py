@@ -1,15 +1,12 @@
 import cv2
 import os
 import db
-import json
 import pickle
 import imutils
 import numpy
-import grpc_client
 from dataset import Dataset
 from datetime import datetime
 from face_detector import FaceDetector
-from mq import Mq
 from sklearn.preprocessing import LabelEncoder
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV
@@ -21,8 +18,6 @@ class Classifier:
         self.dataset = Dataset()
 
         self.classifier = 'linear'
-        self.grab_faces = 300
-        self.use_faces = 300
         self.thresh = 0.4
 
         self.dnn_picture_size_x = 96
@@ -30,26 +25,10 @@ class Classifier:
         self.dumping_file = 'dump.pickle'
         self.dumping_embeddings_file = 'dump_embeddings.pickle'
         self.dumping_clf_file = 'dump_clf.pickle'
-        self.stored_faces = []
-        self.dataset_path = 'images/dataset/'
-
-        self.camera = grpc_client.get_camera()
-        self.mq = Mq()
-        self.mq.connect()
-        self.mq_receive = Mq(
-            queue='recognition_records_pass_to_dnn',
-            exchange='recognition_records_faces',
-            routing_key='new_record'
-        )
-        self.mq_receive.connect()
 
         self.recognizer = None
         self.le = None
         self.embedder = cv2.dnn.readNetFromTorch('dnn/opencv/openface_nn4.v2.t7')
-        self.training = False
-        self.training_camera_id = 0
-        self.training_individual_id = 0
-        self.training_object_id = 0
         self.embeddings = dict()
         self.dnn_picture_size = (self.dnn_picture_size_x, self.dnn_picture_size_y)
 
@@ -80,8 +59,9 @@ class Classifier:
 
         return match, distance
 
-    def update(self):
+    def update(self, camera_id=0):
         start_time = datetime.now()
+
         self.update_db()
         self.update_embeddings()
         self.update_classifier()
@@ -118,12 +98,6 @@ class Classifier:
 
                 # print('Object face data restored from dump for', object_id)
             else:
-                object_path = os.path.join(self.dataset_path, str(object_id))
-
-                if os.path.exists(object_path):
-                    os.system('rm -r ' + object_path)
-                os.makedirs(object_path)
-
                 faces = db.ObjectFaces.select().where(
                     db.ObjectFaces.object_id == object_id
                 ).limit().execute()
@@ -194,15 +168,9 @@ class Classifier:
         self.classifier_names = []
         self.classifier_embeddings = []
         for object_id, faces in self.embeddings.items():
-            count = 0
             for face_id, embedding in faces.items():
-                count += 1
-
                 self.classifier_names.append(object_id)
                 self.classifier_embeddings.append(embedding.flatten())
-
-                if count == self.use_faces:
-                    break
 
         if os.path.exists(self.dumping_clf_file) and self.start_clf_update is False:
             f = open(self.dumping_clf_file, "rb")
@@ -250,143 +218,3 @@ class Classifier:
         self.start_clf_update = False
 
         print(datetime.now() - start_time)
-
-    def face_store(self, face, cube_id):
-        # Get new face and store vector to db
-        if len(self.stored_faces) < self.grab_faces:
-            if face is not None:
-                self.stored_faces.append(face)
-
-                print('Store face to object id', self.training_object_id)
-                print('amount', len(self.stored_faces))
-
-        # Send learning progress to front
-        percent = int(round((100 / self.grab_faces) * len(self.stored_faces)))
-        training_individual_id = self.training_individual_id
-        training_object_id = self.training_object_id
-
-        if percent > 99:
-            percent = 99
-
-        if len(self.stored_faces) == self.grab_faces:
-            for face in self.stored_faces:
-                # Store to db
-                db.ObjectFaces.create(
-                    data=pickle.dumps({
-                        "rect": {
-                            "face": face
-                        }
-                    }),
-                    object_id=self.training_object_id,
-                    created_at=datetime.utcnow().date()
-                )
-
-            self.stored_faces = []
-            self.training = False
-            self.training_individual_id = 0
-            self.training_object_id = 0
-            percent = 100
-
-            self.update()
-
-        self.mq.send(json.dumps({
-            "type": "recognition_learning_progress",
-            "camera_id": self.camera.id,
-            "individual_id": training_individual_id,
-            "data": {
-                "percent": percent,
-                "object_id": training_object_id,
-                "cube_id": cube_id
-            }
-        }), routing_key='recognition_training')
-
-    def training_start(self, individual_id):
-        self.training = True
-        self.training_individual_id = individual_id
-        self.stored_faces = []
-
-        # Create object id
-        if self.training_object_id == 0:
-            object_id = db.Objects.insert(
-                camera_id=self.camera.id,
-                individual_id=self.training_individual_id
-            ).execute()
-
-            self.training_object_id = object_id
-
-    def training_cancel(self):
-        self.stored_faces = []
-        self.mq.send(json.dumps({
-            "type": "recognition_learning_progress",
-            "camera_id": self.camera.id,
-            "individual_id": self.training_individual_id,
-            "data": {
-                "percent": 0,
-                "object_id": self.training_object_id,
-                "cube_id": 0
-            }
-        }), routing_key='recognition_training')
-
-        self.training = False
-
-    def training_remove(self, object_id, individual_id):
-        self.stored_faces = []
-
-        db.Objects.delete().where(
-            db.Objects.id == object_id
-        ).execute()
-
-        db.ObjectFaces.delete().where(
-            db.ObjectFaces.object_id == object_id
-        ).execute()
-
-        self.training_individual_id = 0
-        self.training_object_id = 0
-
-        self.mq.send(json.dumps({
-            "type": "recognition_learning_progress",
-            "camera_id": self.camera.id,
-            "individual_id": individual_id,
-            "data": {
-                "percent": 0,
-                "object_id": object_id
-            }
-        }), routing_key='recognition_training')
-
-    def consume(self):
-        body, method_frame = self.mq_receive.get()
-
-        if body is not None:
-            data = pickle.loads(body)
-            print(data)
-
-            # Get event types
-            if 'type' in data:
-                _data = data['data']
-
-                if 'type' in data:
-                    # Execute other commands
-                    _type = data['type']
-                    camera_id = _data['camera_id']
-                    individual_id = _data['individual_id']
-
-                    if int(camera_id) == int(self.camera.id):
-                        objects = db.Objects.select().where(
-                            db.Objects.individual_id == individual_id
-                        ).execute()
-
-                        for row in objects:
-                            if _type == 'training_cancel':
-                                self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-                                self.training_cancel()
-                            elif _type == 'training_remove':
-                                self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-                                self.training_remove(row.id, individual_id)
-            elif 'train' in data:
-                _data = data['data']
-                camera_id = _data['camera_id']
-                individual_id = _data['individual_id']
-
-                if int(camera_id) == int(self.camera.id):
-                    self.mq_receive.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-                    self.training_start(individual_id)

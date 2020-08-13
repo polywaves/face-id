@@ -2,21 +2,22 @@
 build:
 	docker-compose -f docker-compose.dev.yml build
 
-start:
+up:
 	docker-compose -f docker-compose.dev.yml up -d
 
-stop:
+down:
 	docker-compose -f docker-compose.dev.yml down -v
 
 restart:
-	make stop
-	make start
+	make down
+	make up
 	make logs
 
 logs:
 	docker-compose -f docker-compose.dev.yml logs -f
 
-rebuilt:
-	make stop
+rebuild:
+	make down
 	make build
-	make start
+	make up
+	make logs
